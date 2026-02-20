@@ -1,0 +1,108 @@
+<div class="auth-container">
+  <!-- Left Panel - Dark Informational Section -->
+  <div class="auth-left-panel">
+    <h1 class="auth-title">Access The Terminal</h1>
+    <div class="auth-divider"></div>
+    <p class="auth-subtitle">Institutional Physical Arbitrage System</p>
+    <p class="auth-features">Fully Asset Backed | Secure | Compliant</p>
+  </div>
+
+  <!-- Right Panel - Frosted Glass Login Form -->
+  <div class="auth-right-panel">
+    <div class="auth-form-container">
+      <!-- Brand/Logo -->
+      <div class="auth-brand">
+        <div class="auth-logo">
+          <i data-lucide="gem" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="auth-brand-name">Ornamint</span>
+      </div>
+
+      <div class="auth-form-divider"></div>
+
+      <!-- Form Title -->
+      <h2 class="auth-form-title">Terminal Access</h2>
+
+      <!-- Login Form -->
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <!-- Email Field -->
+        <div class="auth-form-group">
+          <label class="auth-label" for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="auth-input"
+            placeholder="Email Address"
+            [(ngModel)]="loginData.email"
+            required
+            email
+            #emailInput="ngModel"
+          />
+          <div *ngIf="emailInput.invalid && emailInput.touched" class="auth-error">
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="auth-form-group">
+          <label class="auth-label" for="password">Password</label>
+          <div class="auth-password-wrapper">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              name="password"
+              class="auth-input"
+              placeholder="Password"
+              [(ngModel)]="loginData.password"
+              required
+              #passwordInput="ngModel"
+            />
+            <button
+              type="button"
+              class="auth-password-toggle"
+              (click)="togglePasswordVisibility()"
+              aria-label="Toggle password visibility"
+            >
+              <i [attr.data-lucide]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <div *ngIf="passwordInput.invalid && passwordInput.touched" class="auth-error">
+            Password is required
+          </div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="auth-checkbox-group">
+          <input
+            type="checkbox"
+            id="remember"
+            class="auth-checkbox"
+            [(ngModel)]="loginData.rememberMe"
+            name="rememberMe"
+          />
+          <label for="remember" class="auth-checkbox-label">Remember Me</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="auth-submit-btn"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Initialize Session</span>
+          <span *ngIf="isLoading">Initializing...</span>
+        </button>
+
+        <!-- Action Links -->
+        <div class="auth-actions">
+          <a routerLink="/auth/forgot-password" class="auth-link">Forget Password?</a>
+        </div>
+        <div class="auth-actions" style="margin-top: 1rem;">
+          <span style="color: #71717a; font-size: 0.875rem;">You don't have account? </span>
+          <a routerLink="/auth/register" class="auth-link">Please register here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

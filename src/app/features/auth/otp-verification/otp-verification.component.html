@@ -1,0 +1,95 @@
+<div class="auth-container">
+  <!-- Left Panel - Dark Informational Section -->
+  <div class="auth-left-panel">
+    <h1 class="auth-title">Verify Account</h1>
+    <div class="auth-divider"></div>
+    <p class="auth-subtitle">Institutional Physical Arbitrage System</p>
+    <p class="auth-features">Fully Asset Backed | Secure | Compliant</p>
+  </div>
+
+  <!-- Right Panel - Frosted Glass OTP Verification Form -->
+  <div class="auth-right-panel">
+    <div class="auth-form-container">
+      <!-- Brand/Logo -->
+      <div class="auth-brand">
+        <div class="auth-logo">
+          <i data-lucide="gem" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="auth-brand-name">Ornamint</span>
+      </div>
+
+      <div class="auth-form-divider"></div>
+
+      <!-- Form Title -->
+      <h2 class="auth-form-title">OTP Verification</h2>
+
+      <!-- Subtitle -->
+      <p class="otp-subtitle">Enter the 6 digit verification code received on your Email ID</p>
+
+      <!-- OTP Form -->
+      <form (ngSubmit)="onSubmit()" #otpForm="ngForm">
+        <!-- Verification Code Label and Timer -->
+        <div class="otp-header">
+          <div class="otp-label-wrapper">
+            <label class="otp-label">Verification code</label>
+            <i data-lucide="info" class="otp-info-icon"></i>
+            <span class="otp-timer">{{ formatTime(timer) }}</span>
+          </div>
+          <button 
+            type="button" 
+            class="otp-resend-link" 
+            (click)="resendOTP()"
+            [disabled]="!canResend"
+          >
+            Resend OTP
+          </button>
+        </div>
+
+        <!-- OTP Input Fields -->
+        <div class="otp-input-container">
+          <input
+            *ngFor="let digit of otpDigits; let i = index"
+            type="text"
+            class="otp-input"
+            [id]="'otp-' + i"
+            [name]="'otp-' + i"
+            [(ngModel)]="otpDigits[i]"
+            (input)="onOtpInput(i, $event)"
+            (keydown)="onOtpKeyDown(i, $event)"
+            (paste)="onOtpPaste($event)"
+            maxlength="1"
+            pattern="[0-9]"
+            #otpInput="ngModel"
+          />
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="otpError" class="otp-error">
+          {{ otpError }}
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="isVerified" class="auth-success-message">
+          <i data-lucide="check-circle" class="w-5 h-5"></i>
+          <p>Email verified successfully! Redirecting to login...</p>
+        </div>
+
+        <!-- Verify Button -->
+        <button
+          type="submit"
+          class="auth-submit-btn otp-verify-btn"
+          [disabled]="!isOtpComplete() || isLoading || isVerified"
+        >
+          <span *ngIf="!isLoading && !isVerified">Verify</span>
+          <span *ngIf="isLoading">Verifying...</span>
+          <span *ngIf="isVerified">Verified</span>
+        </button>
+
+        <!-- Action Links -->
+        <div class="auth-actions">
+          <a routerLink="/auth/login" class="auth-link">Back to Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

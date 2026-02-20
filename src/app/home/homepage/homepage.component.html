@@ -1,0 +1,370 @@
+<!-- Sticky Navigation -->
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-700 py-6">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <!-- Brand -->
+        <div class="flex items-center gap-3 group cursor-pointer" (click)="scrollToTop()">
+            <div id="logo-icon" class="p-2.5 rounded-xl bg-white/10 text-white backdrop-blur-md transition-all duration-500">
+                <i data-lucide="gem" class="w-6 h-6 group-hover:rotate-12 transition-transform"></i>
+            </div>
+            <span id="logo-text" class="text-2xl font-serif font-bold tracking-[0.25em] uppercase text-white transition-all duration-500">Ornamint</span>
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-12">
+            <div class="flex space-x-10">
+                <a href="#opportunity" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Strategy</a>
+                <a href="#model" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Model</a>
+                <a href="#tiers" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Participation</a>
+                <a href="#partners" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Network</a>
+            </div>
+            <a routerLink="/auth/register" id="signup-btn" class="px-9 py-3 bg-white text-zinc-900 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-zinc-100 active:scale-95 transition-all btn-shimmer cursor-pointer inline-block">
+                Signup
+            </a>
+        </div>
+
+        <!-- Hamburger Toggle -->
+        <button id="menu-toggle" class="md:hidden text-white p-2 transition-colors" (click)="toggleMobileMenu()">
+            <i [attr.data-lucide]="isMobileMenuOpen ? 'x' : 'menu'" id="menu-icon" class="w-8 h-8"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Fullscreen Mobile Navigation -->
+<div id="mobile-menu" [class.open]="isMobileMenuOpen" class="fixed inset-0 z-40 glass-dark md:hidden mobile-menu">
+    <div class="flex flex-col items-center justify-center h-full space-y-10 p-8">
+        <a href="#opportunity" class="mobile-nav-link text-3xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Strategy</a>
+        <a href="#model" class="mobile-nav-link text-3xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Operation Model</a>
+        <a href="#tiers" class="mobile-nav-link text-3xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Investment Tiers</a>
+        <a href="#partners" class="mobile-nav-link text-3xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Partner Program</a>
+        <div class="h-px w-24 bg-zinc-800 my-4"></div>
+        <a routerLink="/auth/register" class="w-full max-w-xs bg-white text-zinc-950 py-6 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl active:scale-95 text-center block" (click)="closeMobileMenu()">Signup</a>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-24 overflow-hidden bg-zinc-950">
+    <!-- Background Asset -->
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1589182337358-2cb63acfa985?auto=format&fit=crop&q=80&w=2000" alt="Silver Bullion Background" class="w-full h-full object-cover opacity-20 scale-110 animate-[pulse_25s_ease-in-out_infinite]">
+        <div class="absolute inset-0 bg-gradient-to-tr from-zinc-950 via-zinc-950/80 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-24 items-center">
+        <div class="reveal">
+            <div class="inline-flex items-center gap-4 px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/60 text-zinc-500 text-[9px] font-black tracking-[0.3em] uppercase mb-12">
+                <span class="flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-zinc-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-zinc-400"></span>
+                </span>
+                Institutional Physical Arbitrage
+            </div>
+            <h1 class="text-6xl md:text-8xl font-serif font-bold text-white leading-[0.9] mb-10">
+                Pure Silver <br>
+                <span class="italic silver-text">Alpha.</span>
+            </h1>
+            <p class="text-xl text-zinc-400 mb-14 max-w-lg leading-relaxed font-light">
+                Execute institutional-grade physical silver trade cycles. Fully asset-backed, compliant arbitrage between high-velocity SE Asian markets and Indian wholesale demand.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-8">
+                <button class="px-14 py-6 bg-white text-zinc-950 font-black rounded-2xl hover:bg-zinc-200 transition-all shadow-[0_0_50px_rgba(255,255,255,0.1)] active:scale-95 flex items-center justify-center group uppercase tracking-[0.2em] text-[10px] btn-shimmer">
+                    Initialize Trade <i data-lucide="arrow-up-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </button>
+                <button class="px-14 py-6 border border-zinc-800 bg-zinc-900/40 backdrop-blur-md text-zinc-400 font-bold rounded-2xl hover:border-zinc-500 hover:text-white transition-all uppercase tracking-[0.2em] text-[10px]">
+                    Review Case Study
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Card Visual -->
+        <div class="hidden lg:block reveal">
+            <div class="relative animate-float">
+                <div class="absolute -inset-10 bg-zinc-500/10 rounded-[4rem] blur-[80px]"></div>
+                <div class="relative bg-zinc-800 rounded-[3rem] overflow-hidden border border-zinc-700/50 p-2 shadow-[0_40px_100px_rgba(0,0,0,0.4)]">
+                    <!-- Corrected image URL for Bullion Dashboard -->
+                    <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=1200" alt="Silver Bullion Asset" class="rounded-[2.8rem] w-full grayscale opacity-90 contrast-125 hover:grayscale-0 transition-all duration-1000">
+                </div>
+                <div class="absolute -bottom-12 -right-12 metallic-dashboard-card p-12 rounded-[2.5rem] border border-zinc-200 shadow-2xl max-w-xs">
+                    <div class="flex items-center gap-6 mb-4">
+                        <div class="p-4 bg-zinc-950 text-white rounded-2xl shadow-xl"><i data-lucide="bar-chart-3" class="w-8 h-8"></i></div>
+                        <div>
+                            <div class="text-zinc-400 text-[10px] font-black uppercase tracking-[0.3em] mb-1">Trade Yield</div>
+                            <div class="text-zinc-950 text-4xl font-serif font-bold italic">7.0%</div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-zinc-500 font-medium leading-relaxed">
+                        Current operational net yield on wholesale distribution cycles (Mumbai/Bangkok).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Strategy Section -->
+<section id="opportunity" class="py-40 bg-white relative">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-32 reveal">
+            <span class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6 block">Market Context</span>
+            <h2 class="text-5xl md:text-7xl font-serif font-bold text-zinc-900 mb-10">The Arbitrage Moat</h2>
+            <div class="h-1.5 w-24 bg-zinc-900 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-16">
+            <div class="metallic-dashboard-card p-14 rounded-[3rem] reveal">
+                <div class="w-20 h-20 bg-zinc-950 text-white rounded-3xl flex items-center justify-center mb-12 shadow-xl"><i data-lucide="factory" class="w-10 h-10"></i></div>
+                <h3 class="text-3xl font-bold text-zinc-900 mb-6">Industrial Scarcity</h3>
+                <p class="text-zinc-500 leading-relaxed text-lg font-light">Silver is the critical element for the green transition. Solar PV and EV demand are decoupling silver from standard precious metal correlations.</p>
+            </div>
+            <div class="metallic-dashboard-card p-14 rounded-[3rem] reveal">
+                <div class="w-20 h-20 bg-zinc-950 text-white rounded-3xl flex items-center justify-center mb-12 shadow-xl"><i data-lucide="globe-2" class="w-10 h-10"></i></div>
+                <h3 class="text-3xl font-bold text-zinc-900 mb-6">Geographic Gap</h3>
+                <p class="text-zinc-500 leading-relaxed text-lg font-light">Price spread systematically exists between Thailand sourcing (LBMA Fix) and Indian wholesale distribution. We bridge this through high-speed trade.</p>
+            </div>
+            <div class="metallic-dashboard-card p-14 rounded-[3rem] reveal">
+                <div class="w-20 h-20 bg-zinc-950 text-white rounded-3xl flex items-center justify-center mb-12 shadow-xl"><i data-lucide="shield-check" class="w-10 h-10"></i></div>
+                <h3 class="text-3xl font-bold text-zinc-900 mb-6">Physical Moat</h3>
+                <p class="text-zinc-500 leading-relaxed text-lg font-light">Participate in a hard-asset strategy. Every dollar of capital is physically deployed into .999 silver bullion bars within secure customs channels.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trade Cycle Section -->
+<section id="model" class="py-40 bg-zinc-100 border-y border-zinc-200">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 reveal">
+            <div class="max-w-2xl">
+                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-4 block">Operation Logistics</span>
+                <h2 class="text-4xl md:text-6xl font-serif font-bold text-zinc-900">Trade Lifecycle Execution</h2>
+            </div>
+            <div class="text-right">
+                <div class="text-zinc-900 font-bold text-xl uppercase tracking-widest font-serif italic">HS Code 7106.91</div>
+                <div class="text-zinc-400 text-[10px] font-black uppercase tracking-widest mt-2">Compliance Framework</div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-10">
+            <div class="metallic-dashboard-card p-12 group reveal">
+                <div class="text-6xl font-serif font-bold text-zinc-200 mb-8 group-hover:text-zinc-950 transition-colors">01</div>
+                <h3 class="text-2xl font-bold text-zinc-900 mb-4">Sourcing</h3>
+                <p class="text-zinc-500 text-sm font-medium leading-relaxed">Securing direct refinery sourcing in Thailand at LBMA benchmarks.</p>
+                <div class="mt-8 pt-8 border-t border-zinc-200 flex justify-between items-center text-zinc-300">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform text-zinc-900"></i>
+                </div>
+            </div>
+            <div class="metallic-dashboard-card p-12 group reveal">
+                <div class="text-6xl font-serif font-bold text-zinc-200 mb-8 group-hover:text-zinc-950 transition-colors">02</div>
+                <h3 class="text-2xl font-bold text-zinc-900 mb-4">Compliance</h3>
+                <p class="text-zinc-500 text-sm font-medium leading-relaxed">Regulatory clearance and duty-free zone transit management.</p>
+                <div class="mt-8 pt-8 border-t border-zinc-200 flex justify-between items-center text-zinc-300">
+                    <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform text-zinc-900"></i>
+                </div>
+            </div>
+            <div class="metallic-dashboard-card p-12 group reveal">
+                <div class="text-6xl font-serif font-bold text-zinc-200 mb-8 group-hover:text-zinc-950 transition-colors">03</div>
+                <h3 class="text-2xl font-bold text-zinc-900 mb-4">Logistics</h3>
+                <p class="text-zinc-500 text-sm font-medium leading-relaxed">Secured high-value transit and vaulting across borders.</p>
+                <div class="mt-8 pt-8 border-t border-zinc-200 flex justify-between items-center text-zinc-300">
+                    <i data-lucide="truck" class="w-5 h-5"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform text-zinc-900"></i>
+                </div>
+            </div>
+            <div class="metallic-dashboard-card p-12 group reveal">
+                <div class="text-6xl font-serif font-bold text-zinc-200 mb-8 group-hover:text-zinc-950 transition-colors">04</div>
+                <h3 class="text-2xl font-bold text-zinc-900 mb-4">Monetize</h3>
+                <p class="text-zinc-500 text-sm font-medium leading-relaxed">Distribution to Mumbai's primary wholesale buyers at local premiums.</p>
+                <div class="mt-8 pt-8 border-t border-zinc-200 flex justify-between items-center text-zinc-300">
+                    <i data-lucide="banknote" class="w-5 h-5"></i>
+                    <i data-lucide="check" class="w-5 h-5 text-zinc-900"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Investment Section -->
+<section id="tiers" class="py-40 bg-zinc-950 text-white relative">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(255,255,255,0.05),transparent_40%)]"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-32 reveal">
+            <h2 class="text-5xl md:text-7xl font-serif font-bold mb-10">Strategic Tiers</h2>
+            <p class="text-xl text-zinc-500 font-light max-w-2xl mx-auto">High-velocity monthly yields backed by physical silver assets. Choose your participation level based on your capital goals.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Mini -->
+            <div class="p-12 rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 reveal group hover:border-zinc-500 transition-all">
+                <div class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-10">Mini Lot</div>
+                <div class="text-5xl font-serif font-bold mb-6 silver-text">3.0%</div>
+                <div class="text-sm font-bold text-zinc-400 mb-12">Capital: $100 - $1,500</div>
+                <ul class="space-y-6 mb-16">
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Monthly Distribution</li>
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Physical Asset Hedge</li>
+                </ul>
+                <button class="w-full py-5 bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-zinc-700 transition-all active:scale-95">Select Portfolio</button>
+            </div>
+            <!-- Small -->
+            <div class="p-12 rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 reveal group hover:border-zinc-500 transition-all">
+                <div class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-10">Small Lot</div>
+                <div class="text-5xl font-serif font-bold mb-6 silver-text">4.0%</div>
+                <div class="text-sm font-bold text-zinc-400 mb-12">Capital: $1,501 - $3,500</div>
+                <ul class="space-y-6 mb-16">
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Performance Reporting</li>
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Auto-Reinvestment</li>
+                </ul>
+                <button class="w-full py-5 bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-zinc-700 transition-all active:scale-95">Select Portfolio</button>
+            </div>
+            <!-- Medium -->
+            <div class="p-12 rounded-[2.5rem] border border-zinc-800 bg-zinc-900/50 reveal group hover:border-zinc-500 transition-all">
+                <div class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-10">Medium Lot</div>
+                <div class="text-5xl font-serif font-bold mb-6 silver-text">5.0%</div>
+                <div class="text-sm font-bold text-zinc-400 mb-12">Capital: $3,501 - $7,500</div>
+                <ul class="space-y-6 mb-16">
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Priority Allocation</li>
+                    <li class="flex items-center gap-3 text-xs font-medium text-zinc-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-700"></i> Verified Audit Logs</li>
+                </ul>
+                <button class="w-full py-5 bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-zinc-700 transition-all active:scale-95">Select Portfolio</button>
+            </div>
+            <!-- Standard (High Quality) -->
+            <div class="p-12 rounded-[2.5rem] bg-white text-zinc-900 scale-105 shadow-[0_0_80px_rgba(255,255,255,0.1)] reveal border border-white">
+                <div class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-10">Standard Lot</div>
+                <div class="text-5xl font-serif font-bold mb-6">7.0%</div>
+                <div class="text-sm font-bold text-zinc-500 mb-12">Capital: $7,501+</div>
+                <ul class="space-y-6 mb-16">
+                    <li class="flex items-center gap-3 text-xs font-black text-zinc-900"><i data-lucide="star" class="w-4 h-4 fill-zinc-900"></i> Premium Yield Access</li>
+                    <li class="flex items-center gap-3 text-xs font-black text-zinc-900"><i data-lucide="star" class="w-4 h-4 fill-zinc-900"></i> Global Profit Pool</li>
+                </ul>
+                <button class="w-full py-5 bg-zinc-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl active:scale-95 btn-shimmer">Maximize Yield</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partner Network Section -->
+<section id="partners" class="py-40 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-32 items-center">
+            <div class="reveal">
+                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6 block">Strategic Growth</span>
+                <h2 class="text-6xl md:text-8xl font-serif font-bold text-zinc-900 leading-[1.0] mb-12">Leverage <br><span class="text-zinc-400 italic">The Matrix.</span></h2>
+                <p class="text-xl text-zinc-500 mb-16 font-light leading-relaxed">Join our high-compliance partner network. Ornamint rewards strategic builders who help scale the physical trade ecosystem across institutional markets.</p>
+                
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="p-10 rounded-[2.5rem] bg-zinc-50 border border-zinc-200 shadow-inner">
+                        <div class="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-3">Silver Rank</div>
+                        <div class="text-4xl font-serif font-bold text-zinc-950 italic">$200</div>
+                        <div class="text-[9px] font-bold text-zinc-400 mt-2 uppercase">Rank Reward</div>
+                    </div>
+                    <div class="p-10 rounded-[2.5rem] bg-zinc-50 border border-zinc-200 shadow-inner">
+                        <div class="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-3">Direct Lead</div>
+                        <div class="text-4xl font-serif font-bold text-zinc-950 italic">5%</div>
+                        <div class="text-[9px] font-bold text-zinc-400 mt-2 uppercase">Level 1 Commission</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rewards Table Visual -->
+            <div class="metallic-dashboard-card p-14 rounded-[3.5rem] bg-zinc-950 text-white reveal relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-zinc-900/50 to-transparent"></div>
+                <div class="relative z-10 space-y-10">
+                    <div class="flex items-center gap-6 mb-12">
+                        <div class="p-4 bg-white text-zinc-950 rounded-2xl shadow-xl"><i data-lucide="users" class="w-8 h-8"></i></div>
+                        <h3 class="text-4xl font-serif font-bold">Referral Matrix</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-end pb-8 border-b border-zinc-800 group cursor-default">
+                            <div>
+                                <div class="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1">Level 1</div>
+                                <div class="text-zinc-300 font-bold text-sm">Direct Participation</div>
+                            </div>
+                            <div class="text-4xl font-serif font-bold silver-text">5%</div>
+                        </div>
+                        <div class="flex justify-between items-end pb-8 border-b border-zinc-800 group cursor-default">
+                            <div>
+                                <div class="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1">Level 2</div>
+                                <div class="text-zinc-500 font-bold text-sm">Indirect Portfolio</div>
+                            </div>
+                            <div class="text-3xl font-serif font-bold text-zinc-600">3%</div>
+                        </div>
+                        <div class="flex justify-between items-end pb-8 border-b border-zinc-800 group cursor-default">
+                            <div>
+                                <div class="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-1">Level 3</div>
+                                <div class="text-zinc-500 font-bold text-sm">Network Expansion</div>
+                            </div>
+                            <div class="text-3xl font-serif font-bold text-zinc-600">2%</div>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <p class="text-zinc-500 text-[11px] leading-relaxed font-medium">Matrix extends up to 17 levels. Performance bonuses awarded for Diamond ($2,500) and Platinum ($1,500) ranks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Global CTA -->
+<section class="py-48 bg-zinc-950 text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.08),transparent_70%)]"></div>
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+        <h2 class="text-6xl md:text-8xl font-serif font-bold text-white mb-14 reveal">Deploy Today.</h2>
+        <div class="flex flex-col sm:flex-row gap-8 justify-center reveal">
+            <button class="px-16 py-7 bg-white text-zinc-950 font-black rounded-3xl hover:bg-zinc-200 transition-all text-sm shadow-[0_0_60px_rgba(255,255,255,0.15)] active:scale-95 uppercase tracking-[0.3em] btn-shimmer">Start Arbitrage</button>
+            <button class="px-16 py-7 border-2 border-zinc-800 text-white font-bold rounded-3xl hover:border-zinc-500 transition-all text-sm active:scale-95 uppercase tracking-[0.3em]">Institutional Deck</button>
+        </div>
+    </div>
+</section>
+
+<!-- High-End Footer -->
+<footer class="bg-zinc-950 pt-40 pb-16 border-t border-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-24 mb-32">
+            <div class="col-span-2">
+                <div class="flex items-center gap-3 mb-12">
+                    <div class="p-3 bg-white text-zinc-950 rounded-2xl"><i data-lucide="gem" class="w-10 h-10"></i></div>
+                    <span class="text-4xl font-serif font-bold tracking-[0.4em] text-white uppercase">Ornamint</span>
+                </div>
+                <p class="max-w-md text-2xl font-light text-zinc-500 leading-relaxed italic mb-12">"Redefining hard-asset yield for the modern institutional portfolio."</p>
+                <div class="flex gap-8">
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 transition-all cursor-pointer"><i data-lucide="globe"></i></div>
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 transition-all cursor-pointer"><i data-lucide="building"></i></div>
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 transition-all cursor-pointer"><i data-lucide="shield"></i></div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white text-[11px] font-black uppercase tracking-[0.4em] mb-12">Platform</h4>
+                <ul class="space-y-8 text-zinc-600 font-bold text-xs uppercase tracking-[0.2em]">
+                    <li><a href="#opportunity" class="hover:text-zinc-200 transition-colors">Trade Thesis</a></li>
+                    <li><a href="#model" class="hover:text-zinc-200 transition-colors">Operational Flow</a></li>
+                    <li><a href="#tiers" class="hover:text-zinc-200 transition-colors">Yield Structures</a></li>
+                    <li><a href="#partners" class="hover:text-zinc-200 transition-colors">Partner Growth</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white text-[11px] font-black uppercase tracking-[0.4em] mb-12">Compliance</h4>
+                <ul class="space-y-8 text-zinc-600 font-bold text-xs uppercase tracking-[0.2em]">
+                    <li><a href="#" class="hover:text-zinc-200 transition-colors">AML / KYC</a></li>
+                    <li><a href="#" class="hover:text-zinc-200 transition-colors">Duty Framework</a></li>
+                    <li><a href="#" class="hover:text-zinc-200 transition-colors">Legal Docs</a></li>
+                    <li><a href="#" class="hover:text-zinc-200 transition-colors">Tax Clearance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="pt-16 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-10">
+            <p class="text-[11px] font-black text-zinc-700 uppercase tracking-[0.3em]">© 2024 Ornamint Physical Arbitrage Group. India - Thailand.</p>
+            <div class="flex items-center gap-12 text-[11px] font-black text-zinc-700 uppercase tracking-[0.3em]">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></span> Terminal Active</span>
+                <span>ISO 9001 Certified</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Fixed -->
+<div class="fixed bottom-12 right-12 z-50">
+    <button (click)="scrollToTop()" class="bg-white text-zinc-950 p-6 rounded-3xl shadow-2xl border border-zinc-200 hover:scale-110 active:scale-90 transition-all group">
+        <i data-lucide="arrow-up" class="w-6 h-6 group-hover:-translate-y-1 transition-transform"></i>
+    </button>
+</div>
