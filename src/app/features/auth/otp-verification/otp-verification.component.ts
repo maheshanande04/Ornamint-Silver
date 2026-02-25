@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 declare var lucide: any;
 
@@ -12,18 +12,36 @@ declare var lucide: any;
   standalone: false
 })
 export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewInit {
-  otpDigits: string[] = ['', '', '', '', '', ''];
+  otpForm: FormGroup;
   timer = 180; // 3 minutes in seconds
   private timerInterval?: any;
   canResend = false;
   isLoading = false;
+  isResending = false;
   isVerified = false;
   otpError = '';
+  email = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.otpForm = this.fb.group({
+      otpDigits: this.fb.array([
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)]),
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)]),
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)]),
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)]),
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)]),
+        this.fb.control('', [Validators.required, Validators.pattern(/^\d$/)])
+      ])
+    });
+  }
 
   ngOnInit(): void {
-    // Start timer
+    this.email = this.route.snapshot.queryParams['email'] || '';
     this.startTimer();
   }
 
@@ -63,6 +81,14 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
     }, 500);
   }
 
+  get otpDigitsArray(): FormArray {
+    return this.otpForm.get('otpDigits') as FormArray;
+  }
+
+  get otpDigits(): string[] {
+    return this.otpDigitsArray.controls.map(control => control.value || '');
+  }
+
   startTimer(): void {
     this.timerInterval = setInterval(() => {
       if (this.timer > 0) {
@@ -87,11 +113,11 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
     
     // Only allow numbers
     if (value && !/^\d$/.test(value)) {
-      this.otpDigits[index] = '';
+      this.otpDigitsArray.at(index).setValue('');
       return;
     }
 
-    this.otpDigits[index] = value;
+    this.otpDigitsArray.at(index).setValue(value);
     this.otpError = '';
 
     // Auto-focus next input
@@ -100,12 +126,6 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
       if (nextInput) {
         (nextInput as HTMLInputElement).focus();
       }
-    }
-
-    // Auto-submit if all fields are filled
-    if (this.isOtpComplete()) {
-      // Optionally auto-submit
-      // this.onSubmit();
     }
   }
 
@@ -125,7 +145,7 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
     
     if (/^\d{6}$/.test(pastedData)) {
       for (let i = 0; i < 6; i++) {
-        this.otpDigits[i] = pastedData[i];
+        this.otpDigitsArray.at(i).setValue(pastedData[i]);
       }
       // Focus last input
       const lastInput = document.getElementById('otp-5');
@@ -136,30 +156,36 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   isOtpComplete(): boolean {
-    return this.otpDigits.every(digit => digit !== '');
+    return this.otpDigitsArray.valid && this.otpDigits.every(digit => digit !== '');
   }
 
   resendOTP(): void {
-    if (!this.canResend) return;
+    if (!this.canResend || !this.email || this.isResending) return;
     
-    // Reset OTP fields
-    this.otpDigits = ['', '', '', '', '', ''];
+    this.isResending = true;
     this.otpError = '';
-    this.canResend = false;
-    this.timer = 180;
-    this.startTimer();
     
-    // Focus first input
-    setTimeout(() => {
-      const firstInput = document.getElementById('otp-0');
-      if (firstInput) {
-        (firstInput as HTMLInputElement).focus();
+    this.authService.resendOtp({ email: this.email }).subscribe({
+      next: () => {
+        this.isResending = false;
+        // Reset OTP fields
+        this.otpDigitsArray.controls.forEach(control => control.setValue(''));
+        this.otpError = '';
+        this.canResend = false;
+        this.timer = 180;
+        this.startTimer();
+        setTimeout(() => {
+          const firstInput = document.getElementById('otp-0');
+          if (firstInput) {
+            (firstInput as HTMLInputElement).focus();
+          }
+        }, 100);
+      },
+      error: (err) => {
+        this.isResending = false;
+        this.otpError = err?.error?.message || err?.error?.error || 'Failed to resend OTP.';
       }
-    }, 100);
-    
-    // Simulate API call to resend OTP
-    console.log('Resending OTP...');
-    // In real app: this.authService.resendOTP().subscribe(...)
+    });
   }
 
   onSubmit(): void {
@@ -170,33 +196,37 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
       return;
     }
 
+    if (!this.email) {
+      this.otpError = 'Email is required. Please go back and register again.';
+      return;
+    }
+
     this.isLoading = true;
     this.otpError = '';
     
-    const otpCode = this.otpDigits.join('');
-    console.log('Verifying OTP:', otpCode);
+    const otpCode = parseInt(this.otpDigits.join(''), 10);
     
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      
-      // Simulate verification (in real app, check with backend)
-      if (otpCode === '123456') {
-        // Test OTP for demo
+    this.authService.verifyUser({
+      email: this.email,
+      otp: otpCode
+    }).subscribe({
+      next: () => {
+        this.isLoading = false;
         this.isVerified = true;
         setTimeout(() => {
           if (typeof lucide !== 'undefined' && lucide.createIcons) {
             lucide.createIcons();
           }
-          // Redirect to login after 2 seconds
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
           }, 2000);
         }, 100);
-      } else {
-        this.otpError = 'Invalid verification code. Please try again.';
-        // Clear OTP fields
-        this.otpDigits = ['', '', '', '', '', ''];
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.otpError = err?.error?.message || err?.error?.error || 'Invalid verification code. Please try again.';
+        // Reset OTP fields
+        this.otpDigitsArray.controls.forEach(control => control.setValue(''));
         setTimeout(() => {
           const firstInput = document.getElementById('otp-0');
           if (firstInput) {
@@ -204,6 +234,6 @@ export class OtpVerificationComponent implements OnInit, OnDestroy, AfterViewIni
           }
         }, 100);
       }
-    }, 1500);
+    });
   }
 }

@@ -11,7 +11,7 @@
   <div class="auth-right-panel">
     <div class="auth-form-container">
       <!-- Brand/Logo -->
-      <div class="auth-brand">
+      <div class="auth-brand"  routerLink="" style="cursor: pointer;">
         <div class="auth-logo">
           <i data-lucide="gem" class="w-5 h-5 text-white"></i>
         </div>
@@ -24,23 +24,21 @@
       <h2 class="auth-form-title">Create Account</h2>
 
       <!-- Registration Form -->
-      <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <!-- Email Field -->
         <div class="auth-form-group">
           <label class="auth-label" for="email">Email Address</label>
           <input
             type="email"
             id="email"
-            name="email"
+            formControlName="email"
             class="auth-input"
             placeholder="Email Address"
-            [(ngModel)]="registerData.email"
-            required
-            email
-            #emailInput="ngModel"
+            [class.auth-input-error]="email?.invalid && email?.touched"
           />
-          <div *ngIf="emailInput.invalid && emailInput.touched" class="auth-error">
-            Please enter a valid email address
+          <div *ngIf="email?.invalid && email?.touched" class="auth-error">
+            <span *ngIf="email?.errors?.['required']">Email is required</span>
+            <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
           </div>
         </div>
 
@@ -51,13 +49,10 @@
             <input
               [type]="showPassword ? 'text' : 'password'"
               id="password"
-              name="password"
+              formControlName="password"
               class="auth-input"
               placeholder="Password"
-              [(ngModel)]="registerData.password"
-              required
-              minlength="8"
-              #passwordInput="ngModel"
+              [class.auth-input-error]="password?.invalid && password?.touched"
             />
             <button
               type="button"
@@ -68,8 +63,9 @@
               <i [attr.data-lucide]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i>
             </button>
           </div>
-          <div *ngIf="passwordInput.invalid && passwordInput.touched" class="auth-error">
-            Password must be at least 8 characters
+          <div *ngIf="password?.invalid && password?.touched" class="auth-error">
+            <span *ngIf="password?.errors?.['required']">Password is required</span>
+            <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters</span>
           </div>
         </div>
 
@@ -80,12 +76,10 @@
             <input
               [type]="showConfirmPassword ? 'text' : 'password'"
               id="confirmPassword"
-              name="confirmPassword"
+              formControlName="confirmPassword"
               class="auth-input"
               placeholder="Confirm Password"
-              [(ngModel)]="registerData.confirmPassword"
-              required
-              #confirmPasswordInput="ngModel"
+              [class.auth-input-error]="(confirmPassword?.invalid || passwordMismatch) && confirmPassword?.touched"
             />
             <button
               type="button"
@@ -96,9 +90,34 @@
               <i [attr.data-lucide]="showConfirmPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i>
             </button>
           </div>
-          <div *ngIf="registerData.password !== registerData.confirmPassword && confirmPasswordInput.touched" class="auth-error">
+          <div *ngIf="confirmPassword?.invalid && confirmPassword?.touched" class="auth-error">
+            <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</span>
+          </div>
+          <div *ngIf="passwordMismatch" class="auth-error">
             Passwords do not match
           </div>
+        </div>
+
+         <!-- Referral Code Field -->
+         <div class="auth-form-group">
+          <label class="auth-label" for="referral">Referral Code</label>
+          <input
+            type="number"
+            id="referral"
+            formControlName="referralCode"
+            class="auth-input"
+            placeholder="Referral Code"
+            [class.auth-input-error]="referralCode?.invalid && referralCode?.touched"
+          />
+          <div *ngIf="referralCode?.invalid && referralCode?.touched" class="auth-error">
+            <span *ngIf="referralCode?.errors?.['required']">Referral Code is required</span>
+            <span *ngIf="referralCode?.errors?.['maxLength']">Please enter a valid referral code</span>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="auth-error-message">
+          {{ errorMessage }}
         </div>
 
         <!-- Terms Checkbox -->
@@ -107,16 +126,13 @@
             type="checkbox"
             id="terms"
             class="auth-checkbox"
-            [(ngModel)]="registerData.acceptTerms"
-            name="acceptTerms"
-            required
-            #termsInput="ngModel"
+            formControlName="acceptTerms"
           />
           <label for="terms" class="auth-checkbox-label">
             I agree to the Terms & Conditions and Privacy Policy
           </label>
         </div>
-        <div *ngIf="termsInput.invalid && termsInput.touched" class="auth-error">
+        <div *ngIf="acceptTerms?.invalid && acceptTerms?.touched" class="auth-error">
           You must accept the terms and conditions
         </div>
 
@@ -124,7 +140,7 @@
         <button
           type="submit"
           class="auth-submit-btn"
-          [disabled]="registerForm.invalid || isLoading || registerData.password !== registerData.confirmPassword"
+          [disabled]="registerForm.invalid || isLoading"
         >
           <span *ngIf="!isLoading">Create Account</span>
           <span *ngIf="isLoading">Creating Account...</span>

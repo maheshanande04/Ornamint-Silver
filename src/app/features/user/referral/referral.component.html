@@ -1,1 +1,13 @@
-<p>referral works!</p>
+<div class="referral-container">
+  <div class="referral-nav-tabs">
+    <button class="nav-tab" [class.active]="isReferralDetails()" (click)="goToDetails()">
+      Referral Details
+    </button>
+    <button class="nav-tab" [class.active]="isReferralTeam()" (click)="goToTeam()">
+      Your Team Details
+    </button>
+  </div>
+  <div class="referral-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

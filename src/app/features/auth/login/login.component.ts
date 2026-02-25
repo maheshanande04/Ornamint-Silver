@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 declare var lucide: any;
 
@@ -12,17 +12,24 @@ declare var lucide: any;
   standalone: false
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-  loginData = {
-    email: '',
-    password: '',
-    rememberMe: false
-  };
-
+  loginForm: FormGroup;
   showPassword = false;
   isLoading = false;
+  errorMessage = '';
+
+  constructor(
+    private router: Router,
+    public authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      rememberMe: [false]
+    });
+  }
 
   ngOnInit(): void {
-    // Initialize component
   }
 
   ngAfterViewInit(): void {
@@ -56,17 +63,55 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }, 50);
   }
 
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  get rememberMe() {
+    return this.loginForm.get('rememberMe');
+  }
+
   onSubmit(): void {
-    if (this.isLoading) return;
+    if (this.isLoading || this.loginForm.invalid) return;
     
     this.isLoading = true;
-    console.log('Login data:', this.loginData);
+    this.errorMessage = '';
     
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      // Handle login logic here
-      // this.router.navigate(['/user']);
-    }, 1500);
+    const formValue = this.loginForm.value;
+    
+    this.authService.login({
+      username: formValue.email,
+      password: formValue.password,
+      platform: 'Ornamint',
+      device_add: "123.3.1.2",
+      device_type: "web"
+    }).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        // Store token/session if API returns it
+        if (response?.code === 200) {
+          localStorage.setItem('auth_token', response.token);
+          const userId = response.userDetails?.user_id;
+          console.log('userId', userId);
+          
+          if (userId != null) {
+            
+            this.authService.setUserId(userId);
+          }
+          this.router.navigate(['/user/dashboard']);
+        } else {
+          this.errorMessage=response.message
+        }
+        ;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err?.error?.message || err?.error?.error || 'Login failed. Please check your credentials.';
+      }
+    });
   }
 }

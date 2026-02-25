@@ -1,1 +1,285 @@
-<p>wallet works!</p>
+<div class="wallet-container">
+  <div *ngIf="!isKycComplete" class="kyc-warning-card">
+    <div class="kyc-warning-icon">
+      <i data-lucide="alert-triangle"></i>
+    </div>
+    <div class="kyc-warning-content">
+      <p class="kyc-warning-title">Your KYC is not completed</p>
+      <p class="kyc-warning-text">Please complete your KYC to enable withdrawals.</p>
+    </div>
+    <a routerLink="/user/profile" class="kyc-warning-action">Complete KYC</a>
+  </div>
+
+  <!-- Wallet Balance Card -->
+  <div class="balance-card">
+    <div class="balance-header">
+      <h2 class="balance-title">My Wallet</h2>
+    </div>
+    <div class="balance-amount">
+      <span class="balance-value">{{ balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+      <span class="balance-currency">USD</span>
+    </div>
+    <div class="balance-actions">
+      <button class="btn btn-deposit" (click)="openDepositModal()" >
+        <i data-lucide="arrow-down-circle"></i>
+        <span>Deposit USD</span>
+      </button>
+      <button class="btn btn-withdraw" (click)="openWithdrawModal()" [disabled]="!isKycComplete">
+        <i data-lucide="arrow-up-circle"></i>
+        <span>Withdraw USD</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Transaction History -->
+  <div class="transaction-card">
+    <div class="card-header">
+      <h3 class="card-title">Transaction History</h3>
+    </div>
+    <div class="table-container">
+      <div *ngIf="isLoadingTransactions" class="loading-state">
+        <p>Loading transaction history...</p>
+      </div>
+      <table *ngIf="!isLoadingTransactions" class="transaction-table">
+        <thead>
+          <tr>
+            <th>Transaction</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of transactions">
+            <td>
+              <div class="transaction-info">
+                <span class="transaction-amount" [class.positive]="transaction.amount > 0" [class.negative]="transaction.amount < 0">
+                  {{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} USD
+                </span>
+                <span class="transaction-date">{{ transaction.date | date:'mediumDate' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="transaction-type">{{ transaction.type }}</span>
+            </td>
+            <td>
+              <span class="amount-value">{{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} USD</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="'status-' + transaction.status.toLowerCase()">
+                {{ transaction.status }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!isLoadingTransactions && transactions.length === 0">
+            <td colspan="4" class="no-data-cell">No transactions found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+        <i data-lucide="chevron-left"></i>
+      </button>
+      <span class="pagination-info">Page {{ currentPage }} < {{ totalPages }} ></span>
+      <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal-overlay" *ngIf="showDepositModal" (click)="closeDepositModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Deposit</h3>
+      <button class="modal-close" (click)="closeDepositModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="chain-info">
+        <span class="chain-label">Chain:</span>
+        <span class="chain-badge">
+          <i data-lucide="circle"></i>
+          <span>BEP20</span>
+        </span>
+      </div>
+
+      <div class="qr-code-container">
+        <ng-container *ngIf="walletAddress; else qrPlaceholder">
+          <div class="qr-code-wrapper">
+            <img
+              class="qr-code-image"
+              [src]="walletQrUrl"
+              alt="Deposit QR Code"
+            />
+          </div>
+        </ng-container>
+        <ng-template #qrPlaceholder>
+          <div class="qr-code-placeholder">
+            <i data-lucide="qr-code"></i>
+            <p>QR Code</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="wallet-address-section">
+        <label class="address-label">Wallet Address:</label>
+        <div class="address-input-group">
+          <input 
+            type="text" 
+            class="address-input" 
+            [value]="walletAddress" 
+            readonly
+          >
+          <button class="copy-btn" (click)="copyToClipboard(walletAddress)" title="Copy">
+            <i data-lucide="copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="balance-display">
+        <span>Current Balance : {{ balance.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) }}USD</span>
+      </div>
+
+      <button class="btn-check-balance" (click)="loadUserDetails()">
+        Check Balance
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal-overlay" *ngIf="showWithdrawModal" (click)="closeWithdrawModal()">
+  <div class="modal-content withdraw-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Withdraw USD</h3>
+      <button class="modal-close" (click)="closeWithdrawModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="chain-info">
+        <span class="chain-label">Chain:</span>
+        <span class="chain-badge">
+          <i data-lucide="circle"></i>
+          <span>BEP20</span>
+        </span>
+      </div>
+
+      <div class="balance-display">
+        <span>Current Balance : {{ balance.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) }}USD</span>
+      </div>
+
+      <!-- Step 1: Withdraw Form -->
+      <form *ngIf="withdrawStep === 1" [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit()">
+        <div class="form-group">
+          <label class="form-label">Enter Wallet Address</label>
+          <input 
+            type="text" 
+            class="form-input" 
+            formControlName="toAddress"
+            placeholder="Enter Wallet Address"
+            [class.form-input-error]="toAddress?.invalid && toAddress?.touched"
+          >
+          <div *ngIf="toAddress?.invalid && toAddress?.touched" class="form-error">
+            Wallet address is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Enter USD Amount</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            formControlName="amount"
+            placeholder="Enter USD Amount"
+            step="0.01"
+            min="2"
+            [class.form-input-error]="amount?.invalid && amount?.touched"
+          >
+          <div *ngIf="amount?.invalid && amount?.touched" class="form-error">
+            <span *ngIf="amount?.errors?.['required']">Amount is required</span>
+            <span *ngIf="amount?.errors?.['min']">Minimum amount is $2.00</span>
+          </div>
+        </div>
+
+        <div class="transaction-info-box">
+          <div class="info-item">
+            <span>Minimum Amount: $2.00</span>
+          </div>
+          <div class="info-item">
+            <span>Network Fee: $1.00</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message" style="margin-bottom: 1rem;">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="withdrawForm.invalid || isSubmittingWithdraw">
+          {{ isSubmittingWithdraw ? 'Sending OTP...' : 'Submit' }}
+        </button>
+      </form>
+
+      <!-- Step 2: OTP Verification -->
+      <div *ngIf="withdrawStep === 2">
+        <button type="button" class="btn-back" (click)="withdrawStep = 1">
+          <i data-lucide="arrow-left"></i> Back
+        </button>
+        <form [formGroup]="otpForm" (ngSubmit)="onOtpSubmit()">
+        <div class="otp-section">
+          <h4 class="otp-title">Enter OTP</h4>
+          <p class="otp-description">Please enter the 6-digit OTP sent to your registered email</p>
+          
+          <div class="form-group">
+            <input 
+              type="text" 
+              class="form-input otp-input" 
+              formControlName="otp"
+              placeholder="Enter 6-digit OTP"
+              maxlength="6"
+              [class.form-input-error]="otp?.invalid && otp?.touched"
+            >
+            <div *ngIf="otp?.invalid && otp?.touched" class="form-error">
+              <span *ngIf="otp?.errors?.['required']">OTP is required</span>
+              <span *ngIf="otp?.errors?.['pattern']">Please enter a valid 6-digit OTP</span>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+
+          <div class="withdraw-summary">
+            <div class="summary-item">
+              <span>To Address:</span>
+              <span class="summary-value">{{ withdrawData.toAddress }}</span>
+            </div>
+            <div class="summary-item">
+              <span>Amount:</span>
+              <span class="summary-value">{{ withdrawData.amount }} USD</span>
+            </div>
+            <div class="summary-item">
+              <span>Network Fee:</span>
+              <span class="summary-value">$1.00</span>
+            </div>
+            <div class="summary-item total">
+              <span>Total:</span>
+              <span class="summary-value">${{ (withdrawData.amount + 1).toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" [disabled]="otpForm.invalid || isSubmittingWithdraw">
+            {{ isSubmittingWithdraw ? 'Processing...' : 'Confirm Withdrawal' }}
+          </button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>

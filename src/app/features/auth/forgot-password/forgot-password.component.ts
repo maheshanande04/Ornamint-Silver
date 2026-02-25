@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 declare var lucide: any;
 
@@ -12,14 +12,20 @@ declare var lucide: any;
   standalone: false
 })
 export class ForgotPasswordComponent implements OnInit, AfterViewInit {
-  resetData = {
-    email: ''
-  };
-
+  forgotPasswordForm: FormGroup;
   isLoading = false;
   isEmailSent = false;
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+  }
 
   ngOnInit(): void {
     // Initialize component
@@ -47,24 +53,32 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
     }, 500);
   }
 
+  get email() {
+    return this.forgotPasswordForm.get('email');
+  }
+
   onSubmit(): void {
-    if (this.isLoading) return;
+    if (this.isLoading || this.forgotPasswordForm.invalid) return;
     
     this.isLoading = true;
-    console.log('Password reset request:', this.resetData);
+    this.errorMessage = '';
     
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      this.isEmailSent = true;
-      setTimeout(() => {
-        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-          lucide.createIcons();
-        }
-        // In a real app, you would redirect to reset-password with a token
-        // For now, show success message and user can click link from email
-        // this.router.navigate(['/auth/reset-password'], { queryParams: { token: 'reset-token' } });
-      }, 100);
-    }, 1500);
+    const formValue = this.forgotPasswordForm.value;
+    
+    this.authService.forgotPassword({ email: formValue.email }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.isEmailSent = true;
+        setTimeout(() => {
+          if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+          }
+        }, 100);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err?.error?.message || err?.error?.error || 'Failed to send reset link. Please try again.';
+      }
+    });
   }
 }

@@ -11,7 +11,7 @@
   <div class="auth-right-panel">
     <div class="auth-form-container">
       <!-- Brand/Logo -->
-      <div class="auth-brand">
+      <div class="auth-brand"  routerLink="" style="cursor: pointer;">
         <div class="auth-logo">
           <i data-lucide="gem" class="w-5 h-5 text-white"></i>
         </div>
@@ -25,9 +25,14 @@
 
       <!-- Subtitle -->
       <p class="otp-subtitle">Enter the 6 digit verification code received on your Email ID</p>
+      <p *ngIf="email" class="otp-email-hint">Code sent to: {{ email }}</p>
+      <div *ngIf="!email" class="otp-no-email">
+        <p class="auth-error">Email not found. Please complete registration first.</p>
+        <a routerLink="/auth/register" class="auth-link">Go to Registration</a>
+      </div>
 
       <!-- OTP Form -->
-      <form (ngSubmit)="onSubmit()" #otpForm="ngForm">
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
         <!-- Verification Code Label and Timer -->
         <div class="otp-header">
           <div class="otp-label-wrapper">
@@ -39,27 +44,25 @@
             type="button" 
             class="otp-resend-link" 
             (click)="resendOTP()"
-            [disabled]="!canResend"
+            [disabled]="!canResend || isResending || !email"
           >
-            Resend OTP
+            {{ isResending ? 'Resending...' : 'Resend OTP' }}
           </button>
         </div>
 
         <!-- OTP Input Fields -->
-        <div class="otp-input-container">
+        <div class="otp-input-container" formArrayName="otpDigits">
           <input
-            *ngFor="let digit of otpDigits; let i = index"
+            *ngFor="let control of otpDigitsArray.controls; let i = index"
             type="text"
             class="otp-input"
             [id]="'otp-' + i"
-            [name]="'otp-' + i"
-            [(ngModel)]="otpDigits[i]"
+            [formControlName]="i"
             (input)="onOtpInput(i, $event)"
             (keydown)="onOtpKeyDown(i, $event)"
             (paste)="onOtpPaste($event)"
             maxlength="1"
             pattern="[0-9]"
-            #otpInput="ngModel"
           />
         </div>
 
@@ -78,7 +81,7 @@
         <button
           type="submit"
           class="auth-submit-btn otp-verify-btn"
-          [disabled]="!isOtpComplete() || isLoading || isVerified"
+          [disabled]="!isOtpComplete() || isLoading || isVerified || !email"
         >
           <span *ngIf="!isLoading && !isVerified">Verify</span>
           <span *ngIf="isLoading">Verifying...</span>

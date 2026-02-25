@@ -1,0 +1,71 @@
+.tree-node-branch {
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+  border-left: 1px dashed #d4d4d8;
+}
+
+.tree-node-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 0 !important;
+}
+
+.tree-node-wrapper.clickable,
+.tree-node-wrapper .clickable {
+  cursor: pointer;  
+}
+
+.tree-node-wrapper.loading .node-avatar {
+  opacity: 0.6;
+}
+
+.tree-children.nested {
+  margin-top: 0.5rem;
+}
+
+.node-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #52525b;
+  background: rgba(113, 113, 122, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #52525b;
+  position: relative;
+}
+
+.node-avatar i:first-child {
+  width: 24px;
+  height: 24px;
+}
+
+.expand-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.expand-icon i {
+  width: 18px !important;
+  height: 18px !important;
+  color: #71717a !important;
+  margin: 2px -4px 0px 0px !important;
+}
+
+.node-email {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #18181b;
+}

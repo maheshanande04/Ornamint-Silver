@@ -1,0 +1,22 @@
+<div class="tree-node-branch">
+  <div class="tree-node-wrapper" 
+       (click)="onNodeClick(node)" 
+       [class.loading]="loadingUserId === node.user_id">
+    <div class="node-avatar clickable">
+      <img src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-icon.png" alt="user" width="36" height="36">
+      
+      <span class="expand-icon" *ngIf="(node.children && node.children.length) || !node.loaded">
+        <!-- <i [attr.data-lucide]="node.expanded ? 'chevron-down' : 'chevron-right'"></i> -->
+        <i class="fa" [class]="node.expanded ? ' fa-chevron-down' : ' fa-chevron-right'"></i>
+      </span>
+    </div>
+    <div class="node-email">{{ node.email || node.username }}</div>
+  </div>
+  <div class="tree-children nested" *ngIf="node.expanded && node.children && node.children.length">
+    <app-tree-node *ngFor="let child of node.children" 
+      [node]="child" 
+      [loadingUserId]="loadingUserId"
+      (nodeClick)="nodeClick.emit($event)">
+    </app-tree-node>
+  </div>
+</div>

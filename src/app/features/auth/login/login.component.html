@@ -11,7 +11,7 @@
   <div class="auth-right-panel">
     <div class="auth-form-container">
       <!-- Brand/Logo -->
-      <div class="auth-brand">
+      <div class="auth-brand" routerLink="" style="cursor: pointer;">
         <div class="auth-logo">
           <i data-lucide="gem" class="w-5 h-5 text-white"></i>
         </div>
@@ -24,23 +24,21 @@
       <h2 class="auth-form-title">Terminal Access</h2>
 
       <!-- Login Form -->
-      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <!-- Email Field -->
         <div class="auth-form-group">
           <label class="auth-label" for="email">Email Address</label>
           <input
             type="email"
             id="email"
-            name="email"
+            formControlName="email"
             class="auth-input"
             placeholder="Email Address"
-            [(ngModel)]="loginData.email"
-            required
-            email
-            #emailInput="ngModel"
+            [class.auth-input-error]="email?.invalid && email?.touched"
           />
-          <div *ngIf="emailInput.invalid && emailInput.touched" class="auth-error">
-            Please enter a valid email address
+          <div *ngIf="email?.invalid && email?.touched" class="auth-error">
+            <span *ngIf="email?.errors?.['required']">Email is required</span>
+            <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
           </div>
         </div>
 
@@ -51,12 +49,10 @@
             <input
               [type]="showPassword ? 'text' : 'password'"
               id="password"
-              name="password"
+              formControlName="password"
               class="auth-input"
               placeholder="Password"
-              [(ngModel)]="loginData.password"
-              required
-              #passwordInput="ngModel"
+              [class.auth-input-error]="password?.invalid && password?.touched"
             />
             <button
               type="button"
@@ -67,9 +63,14 @@
               <i [attr.data-lucide]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i>
             </button>
           </div>
-          <div *ngIf="passwordInput.invalid && passwordInput.touched" class="auth-error">
+          <div *ngIf="password?.invalid && password?.touched" class="auth-error">
             Password is required
           </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="auth-error-message">
+          {{ errorMessage }}
         </div>
 
         <!-- Remember Me Checkbox -->
@@ -78,8 +79,7 @@
             type="checkbox"
             id="remember"
             class="auth-checkbox"
-            [(ngModel)]="loginData.rememberMe"
-            name="rememberMe"
+            formControlName="rememberMe"
           />
           <label for="remember" class="auth-checkbox-label">Remember Me</label>
         </div>

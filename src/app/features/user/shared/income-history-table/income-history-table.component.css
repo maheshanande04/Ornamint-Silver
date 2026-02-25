@@ -1,0 +1,191 @@
+.income-history-section {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 1rem 0;
+}
+
+.income-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.income-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d4d4d8;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #20c997;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.income-tab:hover {
+  background: rgba(244, 244, 245, 0.8);
+  color: #18181b;
+}
+
+.income-tab.active {
+  background: #20c997;
+  border-color: #20c997;
+  color: white;
+}
+
+.table-container {
+  overflow-x: auto;
+  min-height: 200px;
+  position: relative;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.history-table thead {
+  background: rgba(244, 244, 245, 0.8);
+}
+
+.history-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #71717a;
+  white-space: nowrap;
+}
+
+.history-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  color: #18181b;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.status-committed,
+.status-badge.status-completed {
+  background: rgba(113, 113, 122, 0.15);
+  color: #52525b;
+}
+
+.status-badge.status-pending {
+  background: rgba(161, 161, 170, 0.2);
+  color: #71717a;
+}
+
+.no-data-state {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.history-table-head-only {
+  margin-bottom: 0;
+}
+
+.no-data-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.no-data-icon {
+  color: #a1a1aa;
+  margin-bottom: 1rem;
+}
+
+.no-data-icon i {
+  width: 64px;
+  height: 64px;
+}
+
+.no-data-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
+}
+
+.no-data-message {
+  font-size: 0.9375rem;
+  color: #71717a;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .income-tabs {
+    flex-wrap: wrap;
+  }
+
+  .income-tab {
+    font-size: 0.8125rem;
+    padding: 0.45rem 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .income-history-section {
+    padding: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 1.125rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .no-data-content {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .income-history-section {
+    padding: 1rem;
+  }
+
+  .income-tab {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.75rem;
+  }
+}

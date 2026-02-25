@@ -1,0 +1,88 @@
+<div class="referral-team-container">
+  <h2 class="page-title">Your Team Details</h2>
+
+  <!-- Tier Banner -->
+  <div class="tier-banner">
+    <div class="tier-badge"  [ngClass]="tier">
+      <span class="tier-label">{{ tier | uppercase }}</span>
+    </div>
+    <div class="tier-title">{{ tier }}</div>
+    <div class="tier-stats">
+      <div class="stat-item">
+        <span class="stat-label">Team Members</span>
+        <span class="stat-value">{{ teamMembers }}</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">Active Members</span>
+        <span class="stat-value active">{{ activeMembers }}</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">Inactive Members</span>
+        <span class="stat-value inactive">{{ inactiveMembers }}</span>
+      </div>
+      <div class="stat-divider"></div>
+    </div>
+  </div>
+
+  <!-- View Tabs -->
+  <div class="view-tabs">
+    <button class="view-tab" [class.active]="viewMode === 'report'" (click)="setViewMode('report')">
+      Referral Report
+    </button>
+    <button class="view-tab" [class.active]="viewMode === 'tree'" (click)="setViewMode('tree')">
+      Referral Team Tree
+    </button>
+  </div>
+
+  <!-- Referral Report (Table) View -->
+  <div *ngIf="viewMode === 'report'" class="report-section">
+    <div class="level-header">
+      <h3 class="level-title">Level {{ selectedLevel }} Referral</h3>
+      <select class="level-select" (change)="setSelectedLevel(+$any($event.target).value)">
+        <option *ngFor="let lv of levels" [value]="lv" [selected]="lv === selectedLevel">Level {{ lv }}</option>
+      </select>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab" [class.active]="filterType === 'all'" (click)="setFilter('all')">All</button>
+      <button class="filter-tab" [class.active]="filterType === 'subscribed'" (click)="setFilter('subscribed')">Subscribed</button>
+      <button class="filter-tab" [class.active]="filterType === 'nonSubscribed'" (click)="setFilter('nonSubscribed')">Non Subscribed</button>
+    </div>
+    <div class="referral-list">
+      <div *ngFor="let holder of getCurrentLevelHolders(); let i = index" class="referral-item">
+        <span class="item-index">{{ i + 1 }}</span>
+        <span class="item-id">{{ holder.username  }}</span>
+        <span class="status-dot" [class.active]="holder.isContractHolder === 1" [class.inactive]="holder.isContractHolder !== 1"></span>
+      </div>
+      
+      <div *ngIf="getCurrentLevelHolders().length === 0 && !isLoading" class="no-data">
+        No referrals found
+      </div>
+    </div>
+  </div>
+
+  <!-- Referral Team Tree View -->
+  <div *ngIf="viewMode === 'tree'" class="tree-section">
+    
+    <div class="team-tree" *ngIf="rootNode">
+      <div class="tree-node-root" *ngIf="rootNode.expanded">
+        <div class="tree-node-wrapper root">
+          <div class="node-avatar">
+            <img src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-icon.png" alt="user" width="36" height="36">
+          </div>
+          <div class="node-email">{{ rootNode.email || rootNode.username }}</div>
+        </div>
+        <div class="tree-children" *ngIf="rootNode.children && rootNode.children.length">
+          <app-tree-node *ngFor="let child of rootNode.children"
+            [node]="child"
+            [loadingUserId]="treeLoadingUserId"
+            (nodeClick)="onTreeNodeClick($event)">
+          </app-tree-node>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="treeLoading && !rootNode" class="tree-loading">Loading tree...</div>
+    <div *ngIf="!treeLoading && !rootNode" class="no-data">No team tree data available</div>
+  </div>
+</div>

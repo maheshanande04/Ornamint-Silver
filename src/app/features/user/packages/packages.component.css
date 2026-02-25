@@ -1,0 +1,357 @@
+.packages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.package-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.package-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.package-ribbon {
+  background: linear-gradient(135deg, #3f3f46 0%, #18181b 100%);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.package-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.package-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 0.5rem 0;
+}
+
+.package-range {
+  font-size: 0.875rem;
+  color: #71717a;
+}
+
+.package-body {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.package-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+}
+
+.detail-label { color: #71717a; }
+.detail-value { font-weight: 600; color: #18181b; }
+
+.package-penalty {
+  font-size: 0.8rem;
+  color: #71717a;
+  margin: 0.75rem 0 1rem;
+  line-height: 1.4;
+}
+
+.btn-buy {
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #3f3f46 0%, #18181b 100%);
+  color: white;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-buy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 24, 27, 0.3);
+}
+
+/* Contracts Section */
+.contracts-section {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #18181b;
+  margin: 0 0 1rem 0;
+}
+
+.contracts-table-wrapper {
+  overflow-x: auto;
+}
+
+.contracts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.contracts-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: rgba(244, 244, 245, 0.8);
+  font-weight: 600;
+  color: #71717a;
+}
+
+.contracts-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-active { background: rgba(113, 113, 122, 0.15); color: #52525b; }
+.status-pending { background: rgba(161, 161, 170, 0.2); color: #71717a; }
+
+.no-contracts {
+  text-align: center;
+  padding: 2rem;
+  color: #71717a;
+}
+
+/* Buy Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.buy-modal.modal-content {
+  background: white;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e4e4e7;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover { background: #f4f4f5; }
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+}
+
+.balance-label { color: #71717a; }
+.balance-value { font-weight: 600; color: #18181b; }
+
+.form-group { margin: 1rem 0; }
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #52525b;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3f3f46;
+}
+
+.form-input-error { border-color: #71717a; }
+
+.form-error {
+  color: #71717a;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.amount-hint {
+  font-size: 0.75rem;
+  color: #71717a;
+  margin-top: 0.25rem;
+}
+
+.error-message {
+  background: rgba(113, 113, 122, 0.15);
+  color: #52525b;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+.success-message {
+  background: rgba(113, 113, 122, 0.1);
+  color: #3f3f46;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #3f3f46 0%, #18181b 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .packages-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .packages-container {
+    gap: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .package-header,
+  .package-body {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .contracts-section {
+    padding: 1.25rem;
+  }
+
+  .contracts-table-wrapper {
+    margin: 0 -1.25rem;
+    padding: 0 1.25rem;
+  }
+
+  .modal-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    max-height: calc(100vh - 2rem);
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .package-name {
+    font-size: 1.125rem;
+  }
+
+  .package-detail {
+    font-size: 0.875rem;
+  }
+}

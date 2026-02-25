@@ -1,0 +1,116 @@
+<div class="packages-container">
+  <h2 class="page-title">Investment Packages</h2>
+
+  <!-- Package Cards -->
+  <div class="packages-grid">
+    <div class="package-card" *ngFor="let pkg of packages">
+      <div class="package-ribbon">{{ pkg.ribbonText }}</div>
+      <div class="package-header">
+        <h3 class="package-name">{{ pkg.name }}</h3>
+        <div class="package-range">{{ getAmountRange(pkg) }}</div>
+      </div>
+      <div class="package-body">
+        <div class="package-detail">
+          <span class="detail-label">Monthly ROI:</span>
+          <span class="detail-value">{{ pkg.roi }}%</span>
+        </div>
+        <div class="package-detail">
+          <span class="detail-label">Duration:</span>
+          <span class="detail-value">{{ pkg.duration }}</span>
+        </div>
+        <p class="package-penalty">{{ pkg.penalty }}</p>
+        <button class="btn-buy" (click)="openBuyModal(pkg)">
+          Buy Package
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Contracts / History -->
+  <div class="contracts-section">
+    <h3 class="section-title">Your Active Packages</h3>
+    <div class="contracts-table-wrapper">
+      <table class="contracts-table" *ngIf="activeContracts.length > 0">
+        <thead>
+          <tr>
+            <th>Package ID</th>
+            <th>Amount</th>
+            <th>ROI</th>
+            <th>Period</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of activeContracts">
+            <td>{{ getContractId(c) }}</td>
+            <td>{{ getContractAmount(c) | number:'1.2-2' }} USD</td>
+            <td>{{ getContractRoi(c) }}%</td>
+            <td>
+              {{ (c.ist_date ?? c.createdAt ?? c.startDate) | date:'yyyy-MM-dd' }}
+              -
+              {{ (c.expirationDate ?? c.endDate ?? c.maturityDate) | date:'yyyy-MM-dd' }}
+            </td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getContractStatus(c) === 'Active' ? 'status-active' : 'status-pending'"
+              >
+                {{ getContractStatus(c) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="activeContracts.length === 0 && !isLoading" class="no-contracts">
+        No active packages yet.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Package Modal -->
+<div class="modal-overlay" *ngIf="showBuyModal" (click)="closeBuyModal()">
+  <div class="modal-content buy-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Buy {{ selectedPackage?.name }} Package</h3>
+      <button class="modal-close" (click)="closeBuyModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="balance-row">
+        <span class="balance-label">USD Balance:</span>
+        <span class="balance-value">{{ usdtBalance | number:'1.2-2' }} USD</span>
+      </div>
+  
+
+      <form [formGroup]="buyForm" (ngSubmit)="onSubmitBuy()">
+        <div class="form-group">
+          <label class="form-label">Enter Amount:</label>
+          <input
+            type="number"
+            class="form-input"
+            formControlName="amount"
+            placeholder="Enter Amount"
+            step="0.01"
+            min="0"
+            [class.form-input-error]="buyForm.get('amount')?.invalid && buyForm.get('amount')?.touched"
+          >
+          <div *ngIf="buyForm.get('amount')?.invalid && buyForm.get('amount')?.touched" class="form-error">
+            {{ getAmountError() }}
+          </div>
+          <div *ngIf="selectedPackage" class="amount-hint">
+            Valid range: {{ getAmountRange(selectedPackage) }}
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+        <button type="submit" class="btn-submit" [disabled]="buyForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Processing...' : 'Submit' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

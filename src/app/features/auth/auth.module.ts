@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AuthRoutingModule } from './auth-routing.module';
@@ -23,7 +23,7 @@ import { OtpVerificationComponent } from './otp-verification/otp-verification.co
   ],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     AuthRoutingModule
   ]

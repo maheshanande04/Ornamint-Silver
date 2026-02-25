@@ -1,1 +1,272 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <!-- User Profile Section -->
+  <div class="profile-main-card">
+    <div class="profile-header">
+      <h2 class="profile-main-title">User Profile</h2>
+    </div>
+
+    <div class="profile-layout">
+      <!-- My Profile Section -->
+      <div class="my-profile-section">
+        <div class="profile-avatar">
+          <i data-lucide="user"></i>
+        </div>
+        <div class="profile-id">{{ userDetails.userName  }}</div>
+        <div class="profile-email">{{ userDetails.email }}</div>
+        <div class="form-group">
+          <label class="form-label">Email-Address</label>
+          <input 
+            type="email" 
+            class="form-input" 
+            [value]="userDetails.email" 
+            readonly
+          >
+        </div>
+      </div>
+
+      <!-- Profile Details Section -->
+      <div class="profile-details-section">
+        <h3 class="section-title">Profile Details</h3>
+        <div class="detail-item">
+          <span class="detail-label">UserName:</span>
+          <span class="detail-value">{{ userDetails.userName }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Account Holder Name:</span>
+          <span class="detail-value">{{ userDetails.accountHolderName}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Pan Number:</span>
+          <span class="detail-value">{{ userDetails.panNumber}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Aadhaar Number:</span>
+          <span class="detail-value">{{ userDetails.aadhaarNumber}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KYC Section -->
+  <div class="kyc-card">
+    <div class="kyc-header">
+      <h3 class="kyc-title">KYC Details</h3>
+      <span class="kyc-status-badge" [class.status-pending]="kycStatus === 'Pending'" [class.status-verified]="kycStatus === 'Verified'">
+        {{ kycStatus }}
+      </span>
+    </div>
+
+    <!-- KYC Steps Progress -->
+    <div class="kyc-steps">
+      <div 
+        *ngFor="let step of kycSteps" 
+        class="kyc-step"
+        [class]="getStepStatusClass(step)"
+      >
+        <div class="step-circle">
+          <span class="step-number" *ngIf="step.status !== 'verified' && step.status !== 'waiting-approval'">{{ step.number }}</span>
+          <i *ngIf="step.status === 'verified'" data-lucide="check" class="step-check"></i>
+          <i *ngIf="step.status === 'waiting-approval'" data-lucide="clock" class="step-waiting-icon"></i>
+        </div>
+        <div class="step-label">{{ step.name }}</div>
+        <div class="step-status-text" [class.verified]="step.status === 'verified'" [class.not-verified]="step.status === 'not-verified'" [class.waiting]="step.status === 'waiting-approval'">
+          {{ getStepStatusText(step) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- KYC Forms -->
+    <div class="kyc-forms">
+      <!-- PAN Verification Form -->
+      <div *ngIf="currentKycStep === 1" class="kyc-form-section">
+        <h4 class="form-section-title">Pan Verification</h4>
+        <form [formGroup]="panForm" (ngSubmit)="submitPanVerification()">
+          <div class="form-group">
+            <label class="form-label">Enter Pan Number *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="number"
+              placeholder="Enter Pan Number"
+              maxlength="10"
+              [class.form-input-error]="panNumber?.invalid && panNumber?.touched"
+            >
+            <div *ngIf="panNumber?.invalid && panNumber?.touched" class="form-error">
+              <span *ngIf="panNumber?.errors?.['required']">PAN number is required</span>
+              <span *ngIf="panNumber?.errors?.['pattern']">Please enter a valid PAN number</span>
+            </div>
+          </div>
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="success-message">
+            {{ successMessage }}
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="panForm.invalid || isLoading">
+            {{ isLoading ? 'Verifying...' : 'Submit' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Aadhaar Verification Form / Waiting for approval -->
+      <div *ngIf="currentKycStep === 2" class="kyc-form-section">
+        <h4 class="form-section-title">Aadhaar Verification</h4>
+        <div *ngIf="kycSteps[1].status === 'waiting-approval'" class="waiting-approval-message">
+          <p>Your Aadhaar documents have been submitted and are under review. Admin will approve shortly.</p>
+        </div>
+        <form *ngIf="showAadhaarForm()" [formGroup]="aadhaarForm" (ngSubmit)="submitAadhaarVerification()">
+          <div class="form-group">
+            <label class="form-label">Enter Aadhaar Number *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="number"
+              placeholder="Enter Aadhaar Number"
+              maxlength="12"
+              [class.form-input-error]="aadhaarNumber?.invalid && aadhaarNumber?.touched"
+            >
+            <div *ngIf="aadhaarNumber?.invalid && aadhaarNumber?.touched" class="form-error">
+              <span *ngIf="aadhaarNumber?.errors?.['required']">Aadhaar number is required</span>
+              <span *ngIf="aadhaarNumber?.errors?.['pattern']">Please enter a valid 12-digit Aadhaar number</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Enter Aadhaar Name *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="name"
+              placeholder="Enter Aadhaar Name"
+              [class.form-input-error]="aadhaarName?.invalid && aadhaarName?.touched"
+            >
+            <div *ngIf="aadhaarName?.invalid && aadhaarName?.touched" class="form-error">
+              Aadhaar name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Enter DOB *</label>
+            <input 
+              type="date" 
+              class="form-input" 
+              formControlName="dob"
+              [class.form-input-error]="aadhaarDob?.invalid && aadhaarDob?.touched"
+            >
+            <div *ngIf="aadhaarDob?.invalid && aadhaarDob?.touched" class="form-error">
+              Date of birth is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Aadhaar Front Image *</label>
+            <div class="file-upload-wrapper">
+              <input 
+                type="file" 
+                id="aadhaarFront"
+                accept="image/*"
+                (change)="onFileSelected($event, 'front')"
+                class="file-input"
+              >
+              <label for="aadhaarFront" class="file-label">
+                <i data-lucide="upload"></i>
+                <span>{{ aadhaarFrontFile ? aadhaarFrontFile.name : 'Choose File' }}</span>
+              </label>
+            </div>
+            <div *ngIf="aadhaarFrontPreview" class="image-preview">
+              <img [src]="aadhaarFrontPreview" alt="Aadhaar Front">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Aadhaar Back Image *</label>
+            <div class="file-upload-wrapper">
+              <input 
+                type="file" 
+                id="aadhaarBack"
+                accept="image/*"
+                (change)="onFileSelected($event, 'back')"
+                class="file-input"
+              >
+              <label for="aadhaarBack" class="file-label">
+                <i data-lucide="upload"></i>
+                <span>{{ aadhaarBackFile ? aadhaarBackFile.name : 'Choose File' }}</span>
+              </label>
+            </div>
+            <div *ngIf="aadhaarBackPreview" class="image-preview">
+              <img [src]="aadhaarBackPreview" alt="Aadhaar Back">
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="success-message">
+            {{ successMessage }}
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="aadhaarForm.invalid || isLoading || !aadhaarFrontFile || !aadhaarBackFile">
+            {{ isLoading ? 'Verifying...' : 'Submit' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Bank Verification Form / Waiting for approval -->
+      <div *ngIf="currentKycStep === 3" class="kyc-form-section">
+        <h4 class="form-section-title">Add Bank Account</h4>
+        <div *ngIf="kycSteps[2].status === 'waiting-approval'" class="waiting-approval-message">
+          <p>Your bank details have been submitted and are under review. Admin will approve shortly.</p>
+        </div>
+        <form *ngIf="showBankForm()" [formGroup]="bankForm" (ngSubmit)="submitBankVerification()">
+          <div class="form-group">
+            <label class="form-label">Bank Account Number *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="number"
+              placeholder="Enter Bank Account Number"
+              [class.form-input-error]="bankNumber?.invalid && bankNumber?.touched"
+            >
+            <div *ngIf="bankNumber?.invalid && bankNumber?.touched" class="form-error">
+              Bank account number is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">IFSC Code *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="ifsc"
+              placeholder="Enter IFSC Code"
+              maxlength="11"
+              [class.form-input-error]="bankIfsc?.invalid && bankIfsc?.touched"
+            >
+            <div *ngIf="bankIfsc?.invalid && bankIfsc?.touched" class="form-error">
+              <span *ngIf="bankIfsc?.errors?.['required']">IFSC code is required</span>
+              <span *ngIf="bankIfsc?.errors?.['pattern']">Please enter a valid IFSC code</span>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="success-message">
+            {{ successMessage }}
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="bankForm.invalid || isLoading">
+            {{ isLoading ? 'Verifying...' : 'Submit' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Completed Step -->
+      <div *ngIf="currentKycStep === 4" class="kyc-completed">
+        <div class="completed-icon">
+          <i data-lucide="check-circle"></i>
+        </div>
+        <h4 class="completed-title">KYC Verification Completed</h4>
+        <p class="completed-message">All your KYC documents have been verified successfully.</p>
+      </div>
+    </div>
+  </div>
+</div>

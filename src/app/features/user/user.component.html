@@ -1,1 +1,83 @@
-<p>user works!</p>
+<div class="user-container">
+  <!-- Mobile overlay when sidebar open -->
+  <div class="sidebar-overlay" *ngIf="sidebarOpen" (click)="closeSidebar()" aria-hidden="true"></div>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i data-lucide="gem"></i>
+        </div>
+        <span class="logo-text">Ornamint</span>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/user/dashboard" routerLinkActive="active" class="nav-item">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/user/profile" routerLinkActive="active" class="nav-item">
+        <i data-lucide="user"></i>
+        <span>Profile</span>
+      </a>
+      <a routerLink="/user/wallet" routerLinkActive="active" class="nav-item">
+        <i data-lucide="wallet"></i>
+        <span>My Wallet</span>
+      </a>
+      <a routerLink="/user/packages" routerLinkActive="active" class="nav-item">
+        <i data-lucide="package"></i>
+        <span>Packages</span>
+      </a>
+      <a routerLink="/user/referral" routerLinkActive="active" class="nav-item">
+        <i data-lucide="users"></i>
+        <span>Referral Matrix</span>
+      </a>
+      <a routerLink="/user/income-history" routerLinkActive="active" class="nav-item">
+        <i data-lucide="list"></i>
+        <span>Income History</span>
+      </a>
+      <a routerLink="/user/settings" routerLinkActive="active" class="nav-item">
+        <i data-lucide="settings"></i>
+        <span>Settings</span>
+      </a>
+      <a routerLink="/auth/login" class="nav-item logout">
+        <i data-lucide="log-out"></i>
+        <span>Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="content-header">
+      <button class="menu-toggle" type="button" (click)="toggleSidebar()" title="Menu" aria-label="Toggle menu">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="header-logo">
+        <div class="header-logo-icon">
+          <i data-lucide="gem"></i>
+        </div>
+        <span class="header-logo-text">Ornamint</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" title="Notifications">
+          <i data-lucide="bell"></i>
+        </button>
+        <button class="icon-btn" title="Messages">
+          <i data-lucide="message-circle"></i>
+        </button>
+        <a routerLink="/user/profile" class="user-avatar" title="Profile">
+          <i data-lucide="user"></i>
+        </a>
+      </div>
+    </header>
+
+    <!-- Router Outlet for Child Components -->
+    <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
