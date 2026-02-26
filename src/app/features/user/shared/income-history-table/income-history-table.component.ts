@@ -17,6 +17,9 @@ export class IncomeHistoryTableComponent implements AfterViewInit {
   ];
   activeTab = 'direct';
   incomeHistory: any[] = [];
+  rankRecurringIncome: any[] = [];
+  rankOneTimeIncome: any[] = [];
+  activeRankSubTab: 'recurring' | 'oneTime' = 'recurring';
 
   ngAfterViewInit(): void {
     const tryInit = () => {
@@ -31,5 +34,9 @@ export class IncomeHistoryTableComponent implements AfterViewInit {
 
   setActiveTab(id: string): void {
     this.activeTab = id;
+  }
+
+  setActiveRankSubTab(type: 'recurring' | 'oneTime'): void {
+    this.activeRankSubTab = type;
   }
 }

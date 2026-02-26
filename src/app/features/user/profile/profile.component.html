@@ -43,6 +43,47 @@
           <span class="detail-label">Aadhaar Number:</span>
           <span class="detail-value">{{ userDetails.aadhaarNumber}}</span>
         </div>
+        <div class="detail-item">
+          <span class="detail-label">Mobile Number:</span>
+          <span class="detail-value" *ngIf="userDetails.mobileNumber">{{ userDetails.mobileNumber }}</span>
+          <span class="detail-value" *ngIf="!userDetails.mobileNumber">Not Added</span>
+        </div>
+        <div class="detail-item">
+          <button class="mobile-toggle-btn" type="button" (click)="showMobileForm = !showMobileForm">
+            <ng-container *ngIf="!showMobileForm">
+              {{ userDetails.mobileNumber ? 'Edit' : 'Add' }}
+            </ng-container>
+            <ng-container *ngIf="showMobileForm">
+              <i data-lucide="user-x"></i>
+            </ng-container>
+          </button>
+        </div>
+        <div *ngIf="showMobileForm" class="detail-item mobile-detail-item">
+          <form [formGroup]="mobileForm" (ngSubmit)="submitMobileUpdate()" style="width: 100%;">
+            <label class="form-label">Mobile Number</label>
+            <input
+              type="tel"
+              class="form-input"
+              formControlName="mobile_number"
+              placeholder="Enter 10 digit mobile number"
+              maxlength="10"
+              [class.form-input-error]="mobileNumberControl?.invalid && mobileNumberControl?.touched"
+            >
+            <div *ngIf="mobileNumberControl?.invalid && mobileNumberControl?.touched" class="form-error">
+              <span *ngIf="mobileNumberControl?.errors?.['required']">Mobile number is required</span>
+              <span *ngIf="mobileNumberControl?.errors?.['pattern']">Please enter a valid 10 digit mobile number</span>
+            </div>
+            <div *ngIf="errorMessage" class="error-message">
+              {{ errorMessage }}
+            </div>
+            <div *ngIf="successMessage" class="success-message">
+              {{ successMessage }}
+            </div>
+            <button type="submit" class="btn-submit mobile-save-btn" [disabled]="mobileForm.invalid || isLoading">
+              {{ isLoading ? 'Saving...' : 'Save' }}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

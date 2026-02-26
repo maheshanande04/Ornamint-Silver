@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { InrWalletComponent } from './inr-wallet/inr-wallet.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReferralComponent } from './referral/referral.component';
 import { ReferralDetailsComponent } from './referral/referral-details/referral-details.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'wallet', component: WalletComponent },
+      { path: 'wallet-inr', component: InrWalletComponent },
       { path: 'packages', component: PackagesComponent },
       { 
         path: 'referral', 

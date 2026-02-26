@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
 
@@ -39,6 +39,29 @@ export interface BankVerificationRequest {
   ifsc: string;
 }
 
+export interface InrBankDetails {
+  bankName: string;
+  bankAccountNumber: string;
+  bankIfsc: string;
+  bankAccountName: string;
+}
+
+export interface InrDepositRequest {
+  transactionId: string;
+  method: string;
+  amount?: number;
+  screenshot?: File;
+}
+
+export interface InrWithdrawalRequest {
+  withdrawalAmount: number;
+  currency: 'inr';
+}
+
+export interface InrToUsdConversionRequest {
+  inrAmount: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,6 +74,15 @@ export class UserService {
   /** POST getUserDetails with user_id in payload */
   getUserDetails(userId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/getUserDetails`, { user_id: userId });
+  }
+
+  /** GET consolidated dashboard stats (earnings + optional userCounts) */
+  getDashboardStats(includeUserCounts = true): Observable<any> {
+    let params = new HttpParams();
+    if (includeUserCounts) {
+      params = params.set('includeUserCounts', 'true');
+    }
+    return this.http.get(`${this.baseUrl}/dashboard`, { params });
   }
 
   /** Extract balance for a currency from getUserDetails response. balances array: [{currency, current_balance}, ...] */
@@ -142,6 +174,43 @@ export class UserService {
       sortOrder: p.sortOrder ?? 'desc'
     };
     return this.http.post(`${this.baseUrl}/withdrawal/transactionHistory/usdt`, body);
+  }
+
+  /** GET INR deposit bank details - /deposit/inr/bank-details */
+  getInrBankDetails(): Observable<{ code: number; data: InrBankDetails }> {
+    return this.http.get<{ code: number; data: InrBankDetails }>(`${this.baseUrl}/deposit/inr/bank-details`);
+  }
+
+  /**
+   * Dummy INR deposit request API.
+   * Backend path can be updated later; payload kept as described.
+   */
+  createInrDepositRequest(payload: InrDepositRequest): Observable<any> {
+    const formData = new FormData();
+    formData.append('transactionId', payload.transactionId);
+    formData.append('method', payload.method);
+    if (payload.amount != null) {
+      formData.append('amount', String(payload.amount));
+    }
+    if (payload.screenshot) {
+      formData.append('screenshot', payload.screenshot);
+    }
+    return this.http.post(`${this.baseUrl}/deposit/inr/createRequest`, formData);
+  }
+
+  /** POST initiate INR withdrawal - /withdrawal/initiateRequest */
+  initiateInrWithdrawal(payload: InrWithdrawalRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/withdrawal/initiateRequest`, payload);
+  }
+
+  /** POST convert INR balance to USD - /conversion/inr-to-usd/convert */
+  convertInrToUsd(payload: InrToUsdConversionRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/conversion/inr-to-usd/convert`, payload);
+  }
+
+  /** POST update profile (e.g. mobile_number) - /getUserDetails/updateProfile */
+  updateUserProfile(payload: { mobile_number?: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/getUserDetails/updateProfile`, payload);
   }
 
 }

@@ -7,6 +7,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { InrWalletComponent } from './inr-wallet/inr-wallet.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReferralComponent } from './referral/referral.component';
 import { ReferralDetailsComponent } from './referral/referral-details/referral-details.component';
@@ -22,6 +23,7 @@ import { IncomeHistoryTableComponent } from './shared/income-history-table/incom
     UserComponent,
     DashboardComponent,
     WalletComponent,
+    InrWalletComponent,
     ProfileComponent,
     ReferralComponent,
     ReferralDetailsComponent,

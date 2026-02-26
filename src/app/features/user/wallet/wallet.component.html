@@ -1,4 +1,9 @@
 <div class="wallet-container">
+  <div class="wallet-nav-tabs">
+    <a routerLink="/user/wallet" routerLinkActive="active" class="wallet-nav-tab">USD Wallet</a>
+    <a routerLink="/user/wallet-inr" routerLinkActive="active" class="wallet-nav-tab">INR Wallet</a>
+  </div>
+
   <div *ngIf="!isKycComplete" class="kyc-warning-card">
     <div class="kyc-warning-icon">
       <i data-lucide="alert-triangle"></i>
@@ -10,7 +15,7 @@
     <a routerLink="/user/profile" class="kyc-warning-action">Complete KYC</a>
   </div>
 
-  <!-- Wallet Balance Card -->
+  <!-- USD Wallet Balance Card -->
   <div class="balance-card">
     <div class="balance-header">
       <h2 class="balance-title">My Wallet</h2>

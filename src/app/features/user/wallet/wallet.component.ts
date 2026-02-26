@@ -52,6 +52,7 @@ export class WalletComponent implements OnInit, AfterViewInit {
     this.otpForm = this.fb.group({
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
+
   }
 
   ngOnInit(): void {
@@ -145,6 +146,7 @@ export class WalletComponent implements OnInit, AfterViewInit {
       console.log('Copied to clipboard');
     });
   }
+
 
   onWithdrawSubmit(): void {
     if (this.withdrawForm.invalid) return;
@@ -302,4 +304,5 @@ export class WalletComponent implements OnInit, AfterViewInit {
   get otp() {
     return this.otpForm.get('otp');
   }
+
 }

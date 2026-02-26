@@ -1,0 +1,215 @@
+<div class="wallet-container">
+  <div class="wallet-nav-tabs">
+    <a routerLink="/user/wallet" routerLinkActive="active" class="wallet-nav-tab">USD Wallet</a>
+    <a routerLink="/user/wallet-inr" routerLinkActive="active" class="wallet-nav-tab">INR Wallet</a>
+  </div>
+
+  <div *ngIf="!isKycComplete" class="kyc-warning-card">
+    <div class="kyc-warning-icon">
+      <i data-lucide="alert-triangle"></i>
+    </div>
+    <div class="kyc-warning-content">
+      <p class="kyc-warning-title">Your KYC is not completed</p>
+      <p class="kyc-warning-text">Please complete your KYC to use INR wallet.</p>
+    </div>
+    <a routerLink="/user/profile" class="kyc-warning-action">Complete KYC</a>
+  </div>
+
+  <!-- INR Wallet Balance Card -->
+  <div class="balance-card">
+    <div class="balance-header">
+      <h2 class="balance-title">INR Wallet</h2>
+    </div>
+    <div class="balance-amount">
+      <span class="balance-value">{{ inrBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+      <span class="balance-currency">INR</span>
+    </div>
+    <div class="balance-actions">
+      <button class="btn btn-deposit" (click)="openDepositModal()">
+        <i data-lucide="arrow-down-circle"></i>
+        <span>Deposit</span>
+      </button>
+      <button class="btn btn-withdraw" (click)="openWithdrawModal()" [disabled]="!isKycComplete">
+        <i data-lucide="arrow-up-circle"></i>
+        <span>Withdraw</span>
+      </button>
+      <button class="btn btn-deposit" (click)="openConvertModal()" [disabled]="!isKycComplete || inrBalance <= 0">
+        <i data-lucide="refresh-cw"></i>
+        <span>Convert to USD</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- INR Deposit Modal -->
+<div class="modal-overlay" *ngIf="showDepositModal" (click)="closeDepositModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Deposit INR</h3>
+      <button class="modal-close" (click)="closeDepositModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="bank-details" *ngIf="inrBankDetails">
+        <h4>Company Bank Details</h4>
+        <div class="detail-item">
+          <span class="detail-label">Bank Name:</span>
+          <span class="detail-value">{{ inrBankDetails.bankName }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Account Name:</span>
+          <span class="detail-value">{{ inrBankDetails.bankAccountName }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Account Number:</span>
+          <span class="detail-value">{{ inrBankDetails.bankAccountNumber }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">IFSC:</span>
+          <span class="detail-value">{{ inrBankDetails.bankIfsc }}</span>
+        </div>
+      </div>
+
+      <form [formGroup]="inrDepositForm" (ngSubmit)="submitInrDeposit()">
+        <h4 style="margin-top: 1rem;">Deposit Request</h4>
+        <div class="form-group">
+          <label class="form-label">Transaction ID</label>
+          <input
+            type="text"
+            class="form-input"
+            formControlName="transactionId"
+            placeholder="Enter transaction/reference id"
+            [class.form-input-error]="inrTransactionId?.invalid && inrTransactionId?.touched"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Method</label>
+          <select
+            class="form-input"
+            formControlName="method"
+            [class.form-input-error]="inrMethod?.invalid && inrMethod?.touched"
+          >
+            <option value="" disabled>Select method</option>
+            <option value="upi">UPI</option>
+            <option value="neft">NEFT/RTGS</option>
+            <option value="imps">IMPS</option>
+            <option value="cash">Cash Deposit</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount (optional)</label>
+          <input
+            type="number"
+            class="form-input"
+            formControlName="amount"
+            placeholder="Enter INR amount"
+            min="1"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Deposit Screenshot</label>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onInrDepositScreenshotSelected($event)"
+            class="form-input"
+          >
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="inrDepositForm.invalid || isSubmittingInrDeposit">
+          {{ isSubmittingInrDeposit ? 'Submitting...' : 'Submit Request' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- INR Withdraw Modal -->
+<div class="modal-overlay" *ngIf="showWithdrawModal" (click)="closeWithdrawModal()">
+  <div class="modal-content withdraw-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Withdraw INR</h3>
+      <button class="modal-close" (click)="closeWithdrawModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="balance-display">
+        <span>Current Balance : {{ inrBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} INR</span>
+      </div>
+
+      <form [formGroup]="inrWithdrawForm" (ngSubmit)="submitInrWithdraw()">
+        <div class="form-group">
+          <label class="form-label">Enter INR Amount</label>
+          <input
+            type="number"
+            class="form-input"
+            formControlName="amount"
+            placeholder="Enter INR Amount"
+            min="1"
+            [class.form-input-error]="inrWithdrawAmount?.invalid && inrWithdrawAmount?.touched"
+          >
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="inrWithdrawForm.invalid || isSubmittingInrWithdraw">
+          {{ isSubmittingInrWithdraw ? 'Processing...' : 'Submit' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Convert INR to USD Modal -->
+<div class="modal-overlay" *ngIf="showConvertModal" (click)="closeConvertModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Convert INR to USD</h3>
+      <button class="modal-close" (click)="closeConvertModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="balance-display">
+        <span>INR Balance : {{ inrBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} INR</span>
+      </div>
+
+      <form [formGroup]="convertForm" (ngSubmit)="submitConversion()">
+        <div class="form-group">
+          <label class="form-label">Enter INR Amount</label>
+          <input
+            type="number"
+            class="form-input"
+            formControlName="inrAmount"
+            placeholder="Enter INR Amount"
+            min="1"
+            [class.form-input-error]="convertInrAmount?.invalid && convertInrAmount?.touched"
+          >
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="convertForm.invalid || isConverting">
+          {{ isConverting ? 'Converting...' : 'Convert' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+

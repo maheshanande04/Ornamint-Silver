@@ -114,6 +114,38 @@
   color: #18181b;
 }
 
+.mobile-toggle-btn {
+  align-self: flex-start;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  background: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #52525b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.mobile-toggle-btn i {
+  width: 16px;
+  height: 16px;
+}
+
+.mobile-detail-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.mobile-save-btn {
+  width: 160px;
+  justify-content: center;
+}
+
 /* KYC Card */
 .kyc-card {
   background: rgba(255, 255, 255, 0.7);

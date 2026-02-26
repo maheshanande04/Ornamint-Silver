@@ -27,8 +27,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     email: '',
     accountHolderName: '',
     panNumber: '',
-    aadhaarNumber: ''
+    aadhaarNumber: '',
+    mobileNumber: ''
   };
+
+  mobileForm: FormGroup;
+  showMobileForm = false;
 
   kycSteps: KYCStep[] = [
     { number: 1, name: 'Pan Verification', status: 'not-verified' },
@@ -75,6 +79,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       number: ['', [Validators.required]],
       ifsc: ['', [Validators.required, Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]]
     });
+
+    this.mobileForm = this.fb.group({
+      mobile_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
+    });
   }
 
   ngOnInit(): void {
@@ -110,7 +118,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             email: data.email || '',
             accountHolderName: data.accountHolderName || data.fullName || data.panFullName || '',
             panNumber: data.panNumber || '',
-            aadhaarNumber: data.aadharNumber || data.aadhaarNumber || ''
+            aadhaarNumber: data.aadharNumber || data.aadhaarNumber || '',
+            mobileNumber: data.mobile_number || data.mobileNumber || ''
           };
 
           this.profileForm.patchValue({
@@ -311,6 +320,34 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     });
   }
 
+  submitMobileUpdate(): void {
+    if (this.mobileForm.invalid) {
+      return;
+    }
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const payload = this.mobileForm.value;
+    this.userService.updateUserProfile(payload).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response?.code === 5008 || response?.code === 200) {
+          const updated = response?.data || {};
+          this.userDetails.mobileNumber = updated.mobile_number || payload.mobile_number;
+          this.successMessage = response?.message || 'Mobile number updated successfully';
+          this.showMobileForm = false;
+        } else {
+          this.errorMessage = response?.message || 'Failed to update mobile number';
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err?.error?.message || err?.error?.error || 'Failed to update mobile number';
+      }
+    });
+  }
+
   saveProfile(): void {
     if (this.profileForm.invalid) return;
     // In real app, call API to save profile
@@ -361,6 +398,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   get bankIfsc() {
     return this.bankForm.get('ifsc');
+  }
+
+  get mobileNumberControl() {
+    return this.mobileForm.get('mobile_number');
   }
 
   copyToClipboard(text: string): void {

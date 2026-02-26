@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
-import { AuthService } from '../../../core/services/auth.service';
 
 declare var lucide: any;
 
@@ -25,8 +24,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   earningsData: { date: string; value: number }[] = [];
 
   constructor(
-    private userService: UserService,
-    private authService: AuthService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -53,23 +51,21 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   private loadUserData(): void {
-    const userId = this.authService.getUserId();
-    console.log('userId', userId);
-    
-    if (userId == null) return;
-    this.userService.getUserDetails(userId).subscribe({
+    this.userService.getDashboardStats(true).subscribe({
       next: (response) => {
-        // Update stats from API response
-        if (response?.data) {
+        const data = response?.data || response;
+        if (data) {
+          const earnings = data.earnings || data;
+          const userCounts = data.userCounts || data;
           this.stats = {
-            totalEarnings: response.data.totalEarnings || 0,
-            referralEarnings: response.data.referralEarnings || 0,
-            levelEarnings: response.data.levelEarnings || 0,
-            rankEarnings: response.data.rankEarnings || 0,
-            royaltyEarnings: response.data.royaltyEarnings || 0,
-            totalUsers: response.data.totalUsers || 0,
-            activeUsers: response.data.activeUsers || 0,
-            inactiveUsers: response.data.inactiveUsers || 0
+            totalEarnings: earnings.totalEarnings || 0,
+            referralEarnings: earnings.directReferralEarnings || earnings.referralEarnings || 0,
+            levelEarnings: earnings.levelEarnings || 0,
+            rankEarnings: earnings.rankIncome || earnings.rankEarnings || 0,
+            royaltyEarnings: earnings.royaltyEarnings || earnings.teamRoyaltyEarnings || 0,
+            totalUsers: userCounts.totalRegistered || userCounts.totalUsers || 0,
+            activeUsers: userCounts.totalActive || userCounts.activeUsers || 0,
+            inactiveUsers: userCounts.totalInactive || userCounts.inactiveUsers || 0
           };
         }
       },

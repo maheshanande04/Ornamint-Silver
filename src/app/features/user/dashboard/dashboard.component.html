@@ -23,25 +23,25 @@
     </div>
 
     <div class="stat-card">
-      <div class="stat-value">{{ formatCurrency(stats.levelEarnings) }}</div>
+      <div class="stat-value">{{ formatCurrency(stats.rankEarnings) }}</div>
       <div class="stat-label">Rank Earnings</div>
     </div>
 
     <div class="stat-card">
-      <div class="stat-value">{{ formatCurrency(stats.levelEarnings) }}</div>
+      <div class="stat-value">{{ formatCurrency(stats.royaltyEarnings) }}</div>
       <div class="stat-label">Royalty Earnings</div>
     </div>
 
     <div class="stat-card">
-      <div class="stat-value">{{ formatCurrency(stats.levelEarnings) }}</div>
+      <div class="stat-value">{{ stats.totalUsers | number }}</div>
       <div class="stat-label">Total Users</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">{{ formatCurrency(stats.levelEarnings) }}</div>
+      <div class="stat-value">{{ stats.activeUsers | number }}</div>
       <div class="stat-label">Active Users</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">{{ formatCurrency(stats.levelEarnings) }}</div>
+      <div class="stat-value">{{ stats.inactiveUsers | number }}</div>
       <div class="stat-label">Inactive Users</div>
     </div>
   </div>
