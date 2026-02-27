@@ -2,8 +2,16 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { forkJoin } from 'rxjs';
 
 declare var lucide: any;
+
+interface Transaction {
+  amount: number;
+  date: string;
+  type: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-inr-wallet',
@@ -11,6 +19,8 @@ declare var lucide: any;
   styleUrls: ['./inr-wallet.component.css']
 })
 export class InrWalletComponent implements OnInit, AfterViewInit {
+  currentPage = 1;
+  totalPages = 1;
   inrBalance = 0;
   isKycComplete = false;
 
@@ -23,6 +33,7 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
   convertForm: FormGroup;
 
   isLoading = false;
+  isLoadingTransactions = false;
   isSubmittingInrDeposit = false;
   isSubmittingInrWithdraw = false;
   isConverting = false;
@@ -30,6 +41,8 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
 
   inrBankDetails: any = null;
   inrDepositScreenshotFile: File | null = null;
+
+  transactions: Transaction[] = [];
 
   constructor(
     private userService: UserService,
@@ -87,6 +100,84 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
       }
     });
+  }
+
+    previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadTransactions();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadTransactions();
+    }
+  }
+   loadTransactions(): void {
+      this.isLoadingTransactions = true;
+      const params = {
+        pageNumber: this.currentPage,
+        pageSize: 10,
+        sortBy: '_id',
+        sortOrder: 'desc'
+      };
+  
+      const deposit$ = this.userService.getDepositHistory(params);
+      const withdrawal$ = this.userService.getWithdrawalHistory(params);
+  
+      forkJoin([deposit$, withdrawal$]).subscribe({
+          next: ([depositRes, withdrawRes]) => {
+            const deposits = this.mapDeposits(depositRes);
+            const withdrawals = this.mapWithdrawals(withdrawRes);
+            const combined = [...deposits, ...withdrawals].sort((a, b) => {
+              const dA = new Date(a.date).getTime();
+              const dB = new Date(b.date).getTime();
+              return dB - dA;
+            });
+            this.transactions = combined;
+            this.totalPages = Math.max(
+              this.getTotalPages(depositRes),
+              this.getTotalPages(withdrawRes),
+              1
+            );
+            this.isLoadingTransactions = false;
+            setTimeout(() => this.initializeIcons(), 100);
+          },
+          error: (err: any) => {
+            this.isLoadingTransactions = false;
+            this.transactions = [];
+            console.error('Error loading transactions:', err);
+            setTimeout(() => this.initializeIcons(), 100);
+          }
+        });
+    }
+
+      private mapDeposits(res: any): Transaction[] {
+    const list = res?.data ?? res?.transactions ?? res?.list ?? (Array.isArray(res) ? res : []);
+    return (list || []).map((item: any) => ({
+      amount: Math.abs(parseFloat(item.amount ?? item.amountUsdt ?? 0)),
+      date: item.createdAt ?? item.date ?? item.timestamp ?? '',
+      type: 'Deposit',
+      status: item.status ?? 'Committed'
+    }));
+  }
+
+  private mapWithdrawals(res: any): Transaction[] {
+    const list = res?.data ?? res?.transactions ?? res?.list ?? (Array.isArray(res) ? res : []);
+    return (list || []).map((item: any) => ({
+      amount: -Math.abs(parseFloat(item.amount ?? item.amountUsdt ?? 0)),
+      date: item.createdAt ?? item.date ?? item.timestamp ?? '',
+      type: 'Withdraw',
+      status: item.status ?? 'Pending'
+    }));
+  }
+
+  private getTotalPages(res: any): number {
+    const total = res?.total ?? res?.totalRecords ?? res?.totalCount ?? 0;
+    const pageSize = 10;
+    return total > 0 ? Math.ceil(total / pageSize) : 1;
   }
 
   // INR deposit

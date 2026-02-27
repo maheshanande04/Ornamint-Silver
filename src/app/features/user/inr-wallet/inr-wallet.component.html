@@ -33,9 +33,66 @@
         <i data-lucide="arrow-up-circle"></i>
         <span>Withdraw</span>
       </button>
-      <button class="btn btn-deposit" (click)="openConvertModal()" [disabled]="!isKycComplete || inrBalance <= 0">
+      <button class="btn btn-deposit" (click)="openConvertModal()" [disabled]="!isKycComplete ">
         <i data-lucide="refresh-cw"></i>
         <span>Convert to USD</span>
+      </button>
+    </div>
+  </div>
+
+   <!-- Transaction History -->
+  <div class="transaction-card">
+    <div class="card-header">
+      <h3 class="card-title">Transaction History</h3>
+    </div>
+    <div class="table-container">
+      <div *ngIf="isLoadingTransactions" class="loading-state">
+        <p>Loading transaction history...</p>
+      </div>
+      <table *ngIf="!isLoadingTransactions" class="transaction-table">
+        <thead>
+          <tr>
+            <th>Transaction</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of transactions">
+            <td>
+              <div class="transaction-info">
+                <span class="transaction-amount" [class.positive]="transaction.amount > 0" [class.negative]="transaction.amount < 0">
+                  {{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} USD
+                </span>
+                <span class="transaction-date">{{ transaction.date | date:'mediumDate' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="transaction-type">{{ transaction.type }}</span>
+            </td>
+            <td>
+              <span class="amount-value">{{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} USD</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="'status-' + transaction.status.toLowerCase()">
+                {{ transaction.status }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!isLoadingTransactions && transactions.length === 0">
+            <td colspan="4" class="no-data-cell">No transactions found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+        <i data-lucide="chevron-left"></i>
+      </button>
+      <span class="pagination-info">Page {{ currentPage }} < {{ totalPages }} ></span>
+      <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
   </div>
