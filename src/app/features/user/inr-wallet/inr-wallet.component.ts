@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 declare var lucide: any;
 
@@ -52,7 +53,8 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
     this.inrDepositForm = this.fb.group({
       transactionId: ['', [Validators.required]],
       method: ['', [Validators.required]],
-      amount: ['', [Validators.min(1)]]
+      date: ['', [Validators.required]],
+      amount: ['', [Validators.required], [Validators.min(1)]]
     });
 
     this.inrWithdrawForm = this.fb.group({
@@ -102,7 +104,7 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
     });
   }
 
-    previousPage(): void {
+  previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.loadTransactions();
@@ -115,46 +117,46 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
       this.loadTransactions();
     }
   }
-   loadTransactions(): void {
-      this.isLoadingTransactions = true;
-      const params = {
-        pageNumber: this.currentPage,
-        pageSize: 10,
-        sortBy: '_id',
-        sortOrder: 'desc'
-      };
-  
-      const deposit$ = this.userService.getDepositHistory(params);
-      const withdrawal$ = this.userService.getWithdrawalHistory(params);
-  
-      forkJoin([deposit$, withdrawal$]).subscribe({
-          next: ([depositRes, withdrawRes]) => {
-            const deposits = this.mapDeposits(depositRes);
-            const withdrawals = this.mapWithdrawals(withdrawRes);
-            const combined = [...deposits, ...withdrawals].sort((a, b) => {
-              const dA = new Date(a.date).getTime();
-              const dB = new Date(b.date).getTime();
-              return dB - dA;
-            });
-            this.transactions = combined;
-            this.totalPages = Math.max(
-              this.getTotalPages(depositRes),
-              this.getTotalPages(withdrawRes),
-              1
-            );
-            this.isLoadingTransactions = false;
-            setTimeout(() => this.initializeIcons(), 100);
-          },
-          error: (err: any) => {
-            this.isLoadingTransactions = false;
-            this.transactions = [];
-            console.error('Error loading transactions:', err);
-            setTimeout(() => this.initializeIcons(), 100);
-          }
-        });
-    }
+  loadTransactions(): void {
+    this.isLoadingTransactions = true;
+    const params = {
+      pageNumber: this.currentPage,
+      pageSize: 10,
+      sortBy: '_id',
+      sortOrder: 'desc'
+    };
 
-      private mapDeposits(res: any): Transaction[] {
+    const deposit$ = this.userService.getDepositHistory(params);
+    const withdrawal$ = this.userService.getWithdrawalHistory(params);
+
+    forkJoin([deposit$, withdrawal$]).subscribe({
+      next: ([depositRes, withdrawRes]) => {
+        const deposits = this.mapDeposits(depositRes);
+        const withdrawals = this.mapWithdrawals(withdrawRes);
+        const combined = [...deposits, ...withdrawals].sort((a, b) => {
+          const dA = new Date(a.date).getTime();
+          const dB = new Date(b.date).getTime();
+          return dB - dA;
+        });
+        this.transactions = combined;
+        this.totalPages = Math.max(
+          this.getTotalPages(depositRes),
+          this.getTotalPages(withdrawRes),
+          1
+        );
+        this.isLoadingTransactions = false;
+        setTimeout(() => this.initializeIcons(), 100);
+      },
+      error: (err: any) => {
+        this.isLoadingTransactions = false;
+        this.transactions = [];
+        console.error('Error loading transactions:', err);
+        setTimeout(() => this.initializeIcons(), 100);
+      }
+    });
+  }
+
+  private mapDeposits(res: any): Transaction[] {
     const list = res?.data ?? res?.transactions ?? res?.list ?? (Array.isArray(res) ? res : []);
     return (list || []).map((item: any) => ({
       amount: Math.abs(parseFloat(item.amount ?? item.amountUsdt ?? 0)),
@@ -224,14 +226,25 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
 
     this.userService.createInrDepositRequest({
       transactionId: formValue.transactionId,
+      currency: 'INR',
       method: formValue.method,
+      date: formValue.date,
       amount: formValue.amount ? parseFloat(formValue.amount) : undefined,
-      screenshot: this.inrDepositScreenshotFile || undefined
+      file: this.inrDepositScreenshotFile || undefined
     }).subscribe({
       next: (response) => {
         this.isSubmittingInrDeposit = false;
         if (response?.code === 200) {
-          this.closeDepositModal();
+          Swal.fire({
+            title: 'Success!',
+            text: response.message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.closeDepositModal();
+            }
+          });
         } else {
           this.errorMessage = response?.message || 'Failed to create deposit request';
         }
@@ -315,8 +328,18 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
       next: (response) => {
         this.isConverting = false;
         if (response?.code === 200) {
-          this.closeConvertModal();
-          this.loadUserDetails();
+          Swal.fire({
+            title: 'Success!',
+            text: response.message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.closeConvertModal();
+              this.loadUserDetails();
+            }
+          });
+
         } else {
           this.errorMessage = response?.message || 'Conversion failed';
         }

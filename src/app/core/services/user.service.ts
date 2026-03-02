@@ -48,9 +48,11 @@ export interface InrBankDetails {
 
 export interface InrDepositRequest {
   transactionId: string;
+  currency: string;
   method: string;
+  date:string;
   amount?: number;
-  screenshot?: File;
+  file?: File;
 }
 
 export interface InrWithdrawalRequest {
@@ -187,15 +189,18 @@ export class UserService {
    */
   createInrDepositRequest(payload: InrDepositRequest): Observable<any> {
     const formData = new FormData();
-    formData.append('transactionId', payload.transactionId);
-    formData.append('method', payload.method);
+    formData.append('txnID', payload.transactionId);
+    formData.append('currency', payload.currency);
+    formData.append('paymentMethod', payload.method);
+    formData.append('initiatedDate', payload.date);
+    
     if (payload.amount != null) {
       formData.append('amount', String(payload.amount));
     }
-    if (payload.screenshot) {
-      formData.append('screenshot', payload.screenshot);
+    if (payload.file) {
+      formData.append('file', payload.file);
     }
-    return this.http.post(`${this.baseUrl}/deposit/inr/createRequest`, formData);
+    return this.http.post(`${this.baseUrl}/deposit/initiateRequest`, formData);
   }
 
   /** POST initiate INR withdrawal - /withdrawal/initiateRequest */

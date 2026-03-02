@@ -132,7 +132,7 @@
       <form [formGroup]="inrDepositForm" (ngSubmit)="submitInrDeposit()">
         <h4 style="margin-top: 1rem;">Deposit Request</h4>
         <div class="form-group">
-          <label class="form-label">Transaction ID</label>
+          <label class="form-label">Txn ID</label>
           <input
             type="text"
             class="form-input"
@@ -142,8 +142,8 @@
           >
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Method</label>
+         <div class="form-group">
+          <label class="form-label">Payment Method</label>
           <select
             class="form-input"
             formControlName="method"
@@ -153,12 +153,11 @@
             <option value="upi">UPI</option>
             <option value="neft">NEFT/RTGS</option>
             <option value="imps">IMPS</option>
-            <option value="cash">Cash Deposit</option>
           </select>
-        </div>
+        </div> 
 
         <div class="form-group">
-          <label class="form-label">Amount (optional)</label>
+          <label class="form-label">Amount </label>
           <input
             type="number"
             class="form-input"
@@ -167,9 +166,18 @@
             min="1"
           >
         </div>
+        <div class="form-group">
+          <label class="form-label">Initiated Date </label>
+          <input
+            type="date"
+            class="form-input"
+            formControlName="date"
+            placeholder="Select Date"
+          >
+        </div>
 
         <div class="form-group">
-          <label class="form-label">Deposit Screenshot</label>
+          <label class="form-label">Deposit ProofFile/Screenshot</label>
           <input
             type="file"
             accept="image/*"
