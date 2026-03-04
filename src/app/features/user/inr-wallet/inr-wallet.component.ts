@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { forkJoin } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, switchMap } from 'rxjs';
 import Swal from 'sweetalert2';
 
 declare var lucide: any;
@@ -44,6 +44,7 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
   inrDepositScreenshotFile: File | null = null;
 
   transactions: Transaction[] = [];
+  previewData: any;
 
   constructor(
     private userService: UserService,
@@ -68,6 +69,19 @@ export class InrWalletComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadUserDetails();
+
+     // Call preview API when amount changes
+    this.convertForm.get('inrAmount')?.valueChanges
+      .pipe(
+        debounceTime(500),          // wait 500ms after typing
+        distinctUntilChanged(),     // only if value changed
+        switchMap(value => 
+          this.userService.convertpreview(value)
+        )
+      )
+      .subscribe(response => {
+        this.previewData = response.data;
+      });
   }
 
   ngAfterViewInit(): void {

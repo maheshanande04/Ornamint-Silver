@@ -1,0 +1,160 @@
+<div class="teams-page min-h-screen bg-white text-zinc-900">
+  <nav id="navbar" class="fixed w-full z-50 transition-all duration-700 py-6 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+      <div class="flex items-center gap-3 group cursor-pointer" (click)="scrollToTop()">
+        <div id="logo-icon" class="p-2.5 rounded-xl bg-white/10 text-white backdrop-blur-md transition-all duration-500">
+          <i data-lucide="gem" class="w-6 h-6 group-hover:rotate-12 transition-transform"></i>
+        </div>
+        <span id="logo-text"
+          class="text-lg sm:text-2xl font-serif font-bold tracking-[0.12em] sm:tracking-[0.25em] uppercase text-white transition-all duration-500">Ornamint</span>
+      </div>
+
+      <div class="hidden md:flex items-center space-x-12">
+        <div class="flex space-x-10">
+          <a routerLink="/about" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">About</a>
+          <a routerLink="/teams" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Teams</a>
+          <a [routerLink]="['/']" fragment="opportunity" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Strategy</a>
+          <a [routerLink]="['/']" fragment="model" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Model</a>
+          <a [routerLink]="['/']" fragment="tiers" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Participation</a>
+          <a [routerLink]="['/']" fragment="partners" class="nav-link text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">Network</a>
+        </div>
+        <a routerLink="/auth/login" id="signup-btn"
+          class="px-9 py-3 bg-white text-zinc-900 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-zinc-100 active:scale-95 transition-all btn-shimmer cursor-pointer inline-block">
+          SignIn/SignUp
+        </a>
+      </div>
+
+      <button id="menu-toggle" class="md:hidden text-white p-2 transition-colors" (click)="toggleMobileMenu()">
+        <i [attr.data-lucide]="isMobileMenuOpen ? 'x' : 'menu'" id="menu-icon" class="w-8 h-8"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" [class.open]="isMobileMenuOpen" class="fixed inset-0 z-40 glass-dark md:hidden mobile-menu">
+    <div class="flex flex-col items-center justify-center h-full space-y-8 p-6">
+      <a routerLink="/about" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">About</a>
+      <a routerLink="/teams" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Teams</a>
+      <a [routerLink]="['/']" fragment="opportunity" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Strategy</a>
+      <a [routerLink]="['/']" fragment="model" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Operation Model</a>
+      <a [routerLink]="['/']" fragment="tiers" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Investment Tiers</a>
+      <a [routerLink]="['/']" fragment="partners" class="mobile-nav-link text-2xl font-serif font-bold text-zinc-100" (click)="closeMobileMenu()">Partner Program</a>
+      <div class="h-px w-24 bg-zinc-800 my-4"></div>
+      <a routerLink="/auth/login"
+        class="w-full max-w-xs bg-white text-zinc-950 py-6 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl active:scale-95 text-center block"
+        (click)="closeMobileMenu()">SignIn/SignUp</a>
+    </div>
+  </div>
+
+  <section class="relative overflow-hidden border-b border-zinc-200">
+    <div class="mesh-bg"></div>
+    <div class="mx-auto max-w-7xl px-4 py-16 pt-32 sm:px-6 md:py-28 md:pt-36">
+      <p class="mb-6 text-[11px] font-black uppercase tracking-[0.3em] text-zinc-500">Our Teams</p>
+      <h1 class="mb-8 max-w-4xl text-3xl font-serif font-bold leading-tight sm:text-5xl md:text-7xl">
+        Leadership for disciplined silver trade execution.
+      </h1>
+      <p class="max-w-3xl text-base leading-relaxed text-zinc-600 sm:text-lg">
+        Ornamint leadership is focused on governance-driven growth, documentation integrity, and structured
+        cross-border operational alignment.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-20">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <h2 class="text-3xl font-serif font-bold md:text-4xl">Leadership Team</h2>
+      <p class="max-w-2xl text-sm font-medium text-zinc-500">Experienced execution leadership aligned with long-term governance and compliance standards.</p>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2">
+      <article class="member-card">
+        <div class="profile-media">
+          <img src="/assets/Team/CEO_Ruchika.jpeg"
+            alt="Ruchika Anand portrait">
+        </div>
+        <h3>Ruchika Anand</h3>
+        <p class="role">Founder and Chief Executive Officer</p>
+        <p class="mb-4">
+          Ruchika Anand is the Founder and CEO of Ornamint, leading the company's strategic direction and long-term
+          vision. She established Ornamint with the objective of creating a professionally managed, compliance-focused
+          precious metals trading platform centered on structured execution rather than speculative activity.
+        </p>
+        <p class="mini-title">Leadership Emphasis</p>
+        <ul class="member-list">
+          <li>Cross-border trade coordination</li>
+          <li>Documentation-backed execution</li>
+          <li>Operational transparency</li>
+          <li>Long-term governance alignment</li>
+        </ul>
+        <p class="mt-4">
+          Under her direction, Ornamint strengthened international sourcing through partnership with Thailand-based
+          DMAS Jewels Co., Ltd.
+        </p>
+      </article>
+      <article class="member-card">
+        <div class="profile-media">
+          <img src="/assets/Team/AS_Ankur.jpeg"
+            alt="Ankur Taneja portrait">
+        </div>
+        <h3>Ankur Taneja</h3>
+        <p class="role">Associate Director</p>
+        <p class="mb-4">
+          Ankur Taneja oversees operational coordination and trade execution processes, aligning logistics,
+          documentation, and internal workflow management across cross-border silver transactions.
+        </p>
+        <p class="mini-title">Core Focus Areas</p>
+        <ul class="member-list">
+          <li>Trade cycle monitoring</li>
+          <li>Shipment coordination</li>
+          <li>Compliance documentation review</li>
+          <li>Process optimization and reporting</li>
+        </ul>
+        <p class="mt-4">
+          He supports Ornamint's structured execution model by ensuring each transaction follows disciplined
+          operational workflows and governance standards.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="border-y border-zinc-200 bg-zinc-50">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-20">
+      <h2 class="mb-8 text-3xl font-serif font-bold md:mb-10 md:text-4xl">Operational Coverage</h2>
+      <div class="grid gap-6 md:grid-cols-4">
+        <div class="unit-card">
+          <h3>Trade Monitoring</h3>
+          <p>Transaction cycle visibility from sourcing through domestic alignment.</p>
+        </div>
+        <div class="unit-card">
+          <h3>Compliance Review</h3>
+          <p>Commercial and regulatory documentation checks across workflows.</p>
+        </div>
+        <div class="unit-card">
+          <h3>Logistics Coordination</h3>
+          <p>Shipment alignment with traceable process checkpoints and reporting.</p>
+        </div>
+        <div class="unit-card">
+          <h3>Governance Alignment</h3>
+          <p>Operational discipline designed for long-term, sustainable expansion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-20">
+    <div class="rounded-3xl bg-zinc-950 p-6 text-white sm:p-10 md:p-14">
+      <h2 class="mb-4 text-3xl font-serif font-bold md:text-4xl">Leadership Philosophy</h2>
+      <p class="mb-8 max-w-3xl text-zinc-400">
+        Sustainable growth in commodity markets is built on discipline, preparation, and structured systems, not
+        shortcuts.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a routerLink="/about"
+          class="w-full rounded-2xl bg-white px-8 py-4 text-center text-xs font-black uppercase tracking-[0.2em] text-zinc-950 sm:w-auto">Go to
+          About</a>
+        <a routerLink="/"
+          class="w-full rounded-2xl border border-zinc-700 px-8 py-4 text-center text-xs font-black uppercase tracking-[0.2em] text-white sm:w-auto">Back
+          Home</a>
+      </div>
+    </div>
+  </section>
+</div>

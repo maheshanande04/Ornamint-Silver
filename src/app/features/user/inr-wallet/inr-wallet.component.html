@@ -269,7 +269,11 @@
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-
+        <div *ngIf="previewData.charge">
+            <p>Conversion Charges In %: {{ previewData.chargePercent }} %</p>
+            <p>Conversion Charges In INR: {{ previewData.charge }} INR</p>
+            <p>Converted Amount USD: {{ previewData.usdAmount | number:'1.2-2' }} USD</p>
+          </div>
         <button type="submit" class="btn-submit" [disabled]="convertForm.invalid || isConverting">
           {{ isConverting ? 'Converting...' : 'Convert' }}
         </button>

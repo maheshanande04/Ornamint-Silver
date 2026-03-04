@@ -47,18 +47,16 @@
           <span class="detail-label">Mobile Number:</span>
           <span class="detail-value" *ngIf="userDetails.mobileNumber">{{ userDetails.mobileNumber }}</span>
           <span class="detail-value" *ngIf="!userDetails.mobileNumber">Not Added</span>
-        </div>
-        <div class="detail-item">
-          <button class="mobile-toggle-btn" type="button" (click)="showMobileForm = !showMobileForm">
+           <button class="mobile-toggle-btn" type="button" (click)="showMobileForm = !showMobileForm">
             <ng-container *ngIf="!showMobileForm">
               {{ userDetails.mobileNumber ? 'Edit' : 'Add' }}
             </ng-container>
             <ng-container *ngIf="showMobileForm">
-              <i data-lucide="user-x"></i>
+              Close
             </ng-container>
           </button>
-        </div>
-        <div *ngIf="showMobileForm" class="detail-item mobile-detail-item">
+
+             <div *ngIf="showMobileForm" class="mobile-detail-item">
           <form [formGroup]="mobileForm" (ngSubmit)="submitMobileUpdate()" style="width: 100%;">
             <label class="form-label">Mobile Number</label>
             <input
@@ -79,11 +77,16 @@
             <div *ngIf="successMessage" class="success-message">
               {{ successMessage }}
             </div>
+            <br>
             <button type="submit" class="btn-submit mobile-save-btn" [disabled]="mobileForm.invalid || isLoading">
               {{ isLoading ? 'Saving...' : 'Save' }}
             </button>
           </form>
         </div>
+
+        </div>
+       
+     
       </div>
     </div>
   </div>

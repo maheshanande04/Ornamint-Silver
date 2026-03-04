@@ -64,6 +64,9 @@ export interface InrToUsdConversionRequest {
   inrAmount: number;
 }
 
+export interface DeactivePkg{
+  contractId:string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -218,4 +221,11 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/getUserDetails/updateProfile`, payload);
   }
 
+  convertpreview(value:string): Observable<any>{
+    return this.http.get(`${this.baseUrl}/conversion/inr-to-usd/rate?inrAmount=${value}`);
+  }
+
+  deActivepkg(payload:DeactivePkg): Observable<any>{
+    return this.http.post(`${this.baseUrl}/contract/deactivate`, payload);
+  }
 }

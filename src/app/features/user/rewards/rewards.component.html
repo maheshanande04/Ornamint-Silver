@@ -1,0 +1,91 @@
+<div class="rewards-container">
+  <div class="rewards-header">
+    <h2 class="page-title">Rewards</h2>
+    <span class="period-chip">{{ getWindowDateLabel() }}</span>
+  </div>
+
+  <section class="reward-hero-card">
+    <div class="hero-media">
+      <img [src]="bannerImage" alt="Thailand Business Visit reward banner" />
+      
+    </div>
+
+    <div class="hero-content">
+      <p class="headline">Thailand Business Visit - 4N / 5D with Ornamint</p>
+      <!-- <h3 class="title">This is your moment. <br> This is your milestone.</h3> -->
+      <p class="desc">
+        Ornamint is launching an exclusive leadership recognition program. Qualify between
+        <strong>5th March</strong> and <strong>10th April</strong> by either achieving
+        <strong>Gold Rank</strong> or meeting the <strong>$7,500 participation category</strong>.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature">4 Nights / 5 Days Business Visit</div>
+        <div class="feature">International Trade Office Exposure</div>
+        <div class="feature">Pattaya Tourist Site Visits</div>
+        <div class="feature">Leadership Interaction</div>
+        <div class="feature">Global Business Environment Experience</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="progress-card">
+    <div class="progress-head">
+      <h3>Qualification Progress</h3>
+      <span class="state-chip"
+        [ngClass]="{
+          'active-state': status.windowState === 'active',
+          'upcoming-state': status.windowState === 'upcoming',
+          'closed-state': status.windowState === 'closed'
+        }"
+      >
+        {{ getWindowStateLabel() }}
+      </span>
+    </div>
+
+    <div class="progress-group">
+      <div class="progress-top">
+        <span>Qualification Window</span>
+        <strong>{{ status.windowProgressPct | number:'1.0-0' }}%</strong>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill bar-window" [style.width.%]="status.windowProgressPct"></div>
+      </div>
+    </div>
+
+    <div class="progress-group">
+      <div class="progress-top">
+        <span>Path 1: Gold Rank</span>
+        <strong>{{ status.isGoldRank ? 'Qualified' : 'Not Qualified' }}</strong>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill bar-gold" [style.width.%]="status.goldProgressPct"></div>
+      </div>
+      <!-- <small class="hint">Gold rank is auto-detected from your dashboard profile/rank payload when available.</small> -->
+    </div>
+
+    <div class="progress-group">
+      <div class="progress-top">
+        <span>Path 2: $7,500 Participation</span>
+        <strong>${{ formatAmount(status.participationAmount) }} / ${{ formatAmount(participationTarget) }}</strong>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill bar-amount" [style.width.%]="status.participationProgressPct"></div>
+      </div>
+      <!-- <small class="hint">Amount is computed from contract amounts created within the qualification window.</small> -->
+    </div>
+
+    <div class="eligibility-box" [class.ok]="status.isEligible" [class.locked]="!status.isEligible">
+      <h4>{{ status.isEligible ? 'Eligible for Thailand Business Visit' : 'Not Yet Eligible' }}</h4>
+      <p *ngIf="status.isEligible">You have met program criteria within the active qualification period.</p>
+      <p *ngIf="!status.isEligible">
+        Eligibility is confirmed only during active window and based on program terms, available slots, and company travel calendar.
+      </p>
+    </div>
+  </section>
+
+  <section class="footer-note">
+    <p>Eligibility as per program terms. Limited slots. Travel scheduling as per company calendar.</p>
+    <p>Message your coordinator now to confirm your qualification path.</p>
+  </section>
+</div>

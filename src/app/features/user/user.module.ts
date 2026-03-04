@@ -16,6 +16,7 @@ import { TreeNodeComponent } from './referral/referral-team/tree-node/tree-node.
 import { IncomeComponent } from './income/income.component';
 import { PackagesComponent } from './packages/packages.component';
 import { IncomeHistoryTableComponent } from './shared/income-history-table/income-history-table.component';
+import { RewardsComponent } from './rewards/rewards.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { IncomeHistoryTableComponent } from './shared/income-history-table/incom
     TreeNodeComponent,
     IncomeComponent,
     PackagesComponent,
-    IncomeHistoryTableComponent
+    IncomeHistoryTableComponent,
+    RewardsComponent
   ],
   imports: [
     CommonModule,

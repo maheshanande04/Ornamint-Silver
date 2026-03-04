@@ -10,6 +10,7 @@ import { ReferralDetailsComponent } from './referral/referral-details/referral-d
 import { ReferralTeamComponent } from './referral/referral-team/referral-team.component';
 import { IncomeComponent } from './income/income.component';
 import { PackagesComponent } from './packages/packages.component';
+import { RewardsComponent } from './rewards/rewards.component';
 
 const routes: Routes = [
   { 
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'wallet', component: WalletComponent },
       { path: 'wallet-inr', component: InrWalletComponent },
       { path: 'packages', component: PackagesComponent },
+      { path: 'rewards', component: RewardsComponent },
       { 
         path: 'referral', 
         component: ReferralComponent,

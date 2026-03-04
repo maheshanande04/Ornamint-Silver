@@ -80,6 +80,7 @@ export class PackagesComponent implements OnInit, AfterViewInit {
   errorMessage = '';
   successMessage = '';
   activeContracts: any[] = [];
+  deactivepreview: any;
 
   constructor(
     private userService: UserService,
@@ -160,6 +161,12 @@ export class PackagesComponent implements OnInit, AfterViewInit {
     return 'Inactive';
   }
 
+  deActivepkg(id:any){
+   this.userService.deActivepkg({contractId:id}).subscribe((res:any)=>{
+       this.deactivepreview=res.data
+    });
+    
+  }
   openBuyModal(pkg: Package): void {
     this.selectedPackage = pkg;
     this.showBuyModal = true;

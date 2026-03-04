@@ -1,0 +1,163 @@
+.teams-page {
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(24, 24, 27, 0.05), transparent 25%),
+    radial-gradient(circle at 90% 85%, rgba(113, 113, 122, 0.12), transparent 35%);
+}
+
+.mesh-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(24, 24, 27, 0.04) 25%, transparent 25%) -12px 0/24px 24px,
+    linear-gradient(225deg, rgba(24, 24, 27, 0.04) 25%, transparent 25%) -12px 0/24px 24px,
+    linear-gradient(315deg, rgba(24, 24, 27, 0.04) 25%, transparent 25%) 0 0/24px 24px,
+    linear-gradient(45deg, rgba(24, 24, 27, 0.04) 25%, transparent 25%) 0 0/24px 24px;
+  opacity: 0.5;
+}
+
+.member-card {
+  border: 1px solid #e4e4e7;
+  border-radius: 1.6rem;
+  background: #ffffff;
+  padding: 1.6rem;
+  box-shadow: 0 25px 40px -35px rgba(24, 24, 27, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.member-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px -35px rgba(24, 24, 27, 0.55);
+}
+
+.profile-media {
+  width: fit-content;
+  /* aspect-ratio: 16 / 10; */
+  border-radius: 1.2rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border: 1px solid #e4e4e7;
+}
+
+.profile-media img {
+  width: 250px;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.member-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.member-card .role {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #71717a;
+  margin-bottom: 0.8rem;
+}
+
+.member-card p {
+  color: #52525b;
+  line-height: 1.65;
+}
+
+.mini-title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.member-list {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.member-list li {
+  list-style: none;
+  position: relative;
+  padding-left: 1rem;
+  color: #3f3f46;
+}
+
+.member-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.48rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #18181b;
+}
+
+.unit-card {
+  border: 1px solid #d4d4d8;
+  border-radius: 1.3rem;
+  padding: 1.3rem;
+  background: #ffffff;
+}
+
+.unit-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.unit-card p {
+  color: #52525b;
+  line-height: 1.65;
+}
+
+.glass-dark {
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+}
+
+.mobile-menu {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mobile-menu.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  transition: 0.8s;
+}
+
+.btn-shimmer:hover::after {
+  left: 120%;
+  top: 120%;
+}
